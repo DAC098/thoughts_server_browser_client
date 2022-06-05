@@ -1,5 +1,3 @@
 static/*.b.*
 static/manifest.json
 node_modules/
-
-*.config.*

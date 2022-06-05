@@ -1,0 +1,6 @@
+template:
+  directory: ./templates
+  dev_mode: false
+file_serving:
+  directories:
+    "/static/": "./static/"
