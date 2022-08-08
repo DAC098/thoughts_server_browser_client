@@ -1,5 +1,5 @@
 import React from "react"
-import { CustomFieldType, CustomFieldTypeName } from "../../apiv2/custom_field_types"
+import { CustomFieldConfig, CustomFieldType } from "../../apiv2/types"
 import { FloatRangeEditView } from "./FloatRangeView"
 import { FloatEditView } from "./FloatView"
 import { IntegerRangeEditView } from "./IntegerRangeView"
@@ -8,24 +8,24 @@ import { TimeRangeEditView } from "./TimeRangeView"
 import { TimeEditView } from "./TimeView"
 
 interface CustomFieldTypeEditViewProps {
-    config: CustomFieldType
+    config: CustomFieldConfig
 
-    onChange?: (config: CustomFieldType) => void
+    onChange?: (config: CustomFieldConfig) => void
 }
 
 export const CustomFieldTypeEditView = ({config, onChange}: CustomFieldTypeEditViewProps) => {
     switch (config.type) {
-        case CustomFieldTypeName.Integer:
+        case CustomFieldType.Integer:
             return <IntegerEditView config={config} onChange={onChange}/>
-        case CustomFieldTypeName.IntegerRange:
+        case CustomFieldType.IntegerRange:
             return <IntegerRangeEditView config={config} onChange={onChange}/>
-        case CustomFieldTypeName.Float:
+        case CustomFieldType.Float:
             return <FloatEditView config={config} onChange={onChange}/>
-        case CustomFieldTypeName.FloatRange:
+        case CustomFieldType.FloatRange:
             return <FloatRangeEditView config={config} onChange={onChange}/>
-        case CustomFieldTypeName.Time:
+        case CustomFieldType.Time:
             return <TimeEditView config={config} onChange={onChange}/>
-        case CustomFieldTypeName.TimeRange:
+        case CustomFieldType.TimeRange:
             return <TimeRangeEditView config={config} onChange={onChange}/>
     }
 

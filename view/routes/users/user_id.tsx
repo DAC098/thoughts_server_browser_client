@@ -1,7 +1,6 @@
 import { DefaultButton, IconButton, Persona, PersonaSize, Stack } from "@fluentui/react"
 import React, { useEffect, useState } from "react"
-import { useHistory, useLocation, useParams } from "react-router"
-import { Link } from "react-router-dom"
+import { useNavigate, useLocation, useParams, Link } from "react-router-dom"
 import api from "../../apiv2"
 import { User } from "../../apiv2/types"
 
@@ -36,7 +35,8 @@ const UserInformationView = ({user}: UserInformationViewProps) => {
 
 const UserIdView = () => {
     const params = useParams<{user_id: string}>();
-    const history = useHistory();
+    
+    const navigate = useNavigate();
     const location = useLocation();
 
     let [loading, setLoading] = useState(false);
@@ -93,7 +93,7 @@ const UserIdView = () => {
                     let new_path = location.pathname.split("/");
                     new_path.pop();
 
-                    history.push(new_path.join("/"));
+                    navigate(new_path.join("/"));
                 }}
             />
             {loading ?

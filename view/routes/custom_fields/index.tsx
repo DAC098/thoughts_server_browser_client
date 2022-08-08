@@ -1,6 +1,6 @@
 import { CommandBar, DetailsList, ScrollablePane, ShimmeredDetailsList, Stack, Sticky, StickyPositionType } from "@fluentui/react";
 import React, { useEffect } from "react"
-import { useHistory, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
 import { CustomField } from "../../apiv2/types";
@@ -15,7 +15,7 @@ interface CustomFieldsViewProps {
 
 const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
     const params = useParams<{user_id?: string}>();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const custom_fields_state = useAppSelector(state => state.custom_fields);
 
@@ -48,7 +48,7 @@ const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
                         key: "new_field",
                         text: "New Field",
                         iconProps: {iconName: "Add"},
-                        onClick: () => history.push("/custom_fields/0")
+                        onClick: () => navigate("/custom_fields/0")
                     }
                 ]}/>
             </Sticky>
@@ -57,7 +57,7 @@ const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
                 enableShimmer={custom_fields_state.loading}
                 onRenderDetailsHeader={(p, d) => {
                     return <Sticky stickyPosition={StickyPositionType.Header}>
-                        {d(p)}
+                        {d != null ? d(p) : null}
                     </Sticky>
                 }}
                 columns={[

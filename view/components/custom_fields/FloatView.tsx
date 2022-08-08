@@ -1,11 +1,11 @@
 import { Label, Position, SpinButton, Stack, Toggle } from "@fluentui/react";
 import React from "react"
-import { Float, CustomFieldTypeName } from "../../apiv2/custom_field_types";
+import { FloatConfig, CustomFieldType } from "../../apiv2/types";
 
 interface FloatEditViewProps {
-    config: Float
+    config: FloatConfig
 
-    onChange?: (config: Float) => void
+    onChange?: (config: FloatConfig) => void
 }
 
 export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
@@ -16,7 +16,7 @@ export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
                 <Stack horizontal verticalAlign="center" tokens={{childrenGap: 8}}>
                     <Toggle checked={config.minimum != null} onChange={(e,c) => {
                         onChange?.({
-                            type: CustomFieldTypeName.Float, 
+                            type: CustomFieldType.Float, 
                             minimum: c ? 0 : null, maximum: config.maximum,
                             step: config.step, precision: config.precision
                         })
@@ -29,7 +29,7 @@ export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
 
                             if (!isNaN(float) && (config.maximum != null ? float < config.maximum : true)) {
                                 onChange?.({
-                                    type: CustomFieldTypeName.Float, 
+                                    type: CustomFieldType.Float, 
                                     minimum: float, maximum: config.maximum,
                                     step: config.step, precision: config.precision
                                 });
@@ -43,7 +43,7 @@ export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
                 <Stack horizontal verticalAlign="center" tokens={{childrenGap: 8}}>
                     <Toggle checked={config.maximum != null} onChange={(e,c) => {
                         onChange?.({
-                            type: CustomFieldTypeName.Float, 
+                            type: CustomFieldType.Float, 
                             minimum: config.minimum, maximum: c ? 0 : null,
                             step: config.step, precision: config.precision
                         });
@@ -56,7 +56,7 @@ export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
 
                             if (!isNaN(float) && (config.minimum != null ? float > config.minimum : true)) {
                                 onChange?.({
-                                    type: CustomFieldTypeName.Float, 
+                                    type: CustomFieldType.Float, 
                                     minimum: config.minimum, maximum: float,
                                     step: config.step, precision: config.precision
                                 });
@@ -76,7 +76,7 @@ export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
 
                     if (!isNaN(float)) {
                         onChange?.({
-                            type: CustomFieldTypeName.Float,
+                            type: CustomFieldType.Float,
                             minimum: config.minimum, maximum: config.maximum,
                             step: float, precision: config.precision
                         });
@@ -92,7 +92,7 @@ export const FloatEditView = ({config, onChange}: FloatEditViewProps) => {
 
                     if (!isNaN(int)) {
                         onChange?.({
-                            type: CustomFieldTypeName.Float,
+                            type: CustomFieldType.Float,
                             minimum: config.minimum, maximum: config.maximum,
                             step: config.step, precision: int
                         });

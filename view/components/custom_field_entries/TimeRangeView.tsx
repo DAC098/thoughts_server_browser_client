@@ -1,13 +1,12 @@
 import { DatePicker, DefaultButton, Label, Stack, Text, TooltipHost } from "@fluentui/react";
 import React from "react"
-import { TimeRange } from "../../apiv2/custom_field_entry_types";
-import { CustomFieldTypeName, TimeRange as TimeRangeField } from "../../apiv2/custom_field_types";
+import { TimeRangeValue, TimeRangeConfig, CustomFieldType } from "../../apiv2/types";
 import { displayDate } from "../../util/time";
 import TimeInput from "../TimeInput";
 
 interface DetailsTextProps {
-    value: TimeRange
-    config?: TimeRangeField
+    value: TimeRangeValue
+    config?: TimeRangeConfig
 }
 
 const DetailsText = ({value, config}: DetailsTextProps) => {
@@ -25,10 +24,10 @@ const DetailsText = ({value, config}: DetailsTextProps) => {
 }
 
 interface TimeRangeEditViewProps {
-    value: TimeRange
-    config?: TimeRangeField
+    value: TimeRangeValue
+    config?: TimeRangeConfig
 
-    onChange?: (value: TimeRange) => void
+    onChange?: (value: TimeRangeValue) => void
 }
 
 export const TimeRangeEditView = ({value, config = null, onChange}: TimeRangeEditViewProps) => {
@@ -47,14 +46,14 @@ export const TimeRangeEditView = ({value, config = null, onChange}: TimeRangeEdi
                             copy.setFullYear(d.getFullYear());
                             copy.setMonth(d.getMonth());
                             copy.setDate(d.getDate());
-                            onChange?.({type: CustomFieldTypeName.TimeRange, low: copy.toISOString(), high: finish_date.toISOString()})
+                            onChange?.({type: CustomFieldType.TimeRange, low: copy.toISOString(), high: finish_date.toISOString()})
                         }}
                     />
                     <TimeInput value={start_date} onChange={d => {
-                        onChange?.({type: CustomFieldTypeName.TimeRange, low: d.toISOString(), high: finish_date.toISOString()});
+                        onChange?.({type: CustomFieldType.TimeRange, low: d.toISOString(), high: finish_date.toISOString()});
                     }}/>
                     <TooltipHost content="sets the time to this current moment">
-                        <DefaultButton text="Now" onClick={() => onChange?.({type: CustomFieldTypeName.TimeRange, low: (new Date()).toISOString(), high: finish_date.toISOString()})}/>
+                        <DefaultButton text="Now" onClick={() => onChange?.({type: CustomFieldType.TimeRange, low: (new Date()).toISOString(), high: finish_date.toISOString()})}/>
                     </TooltipHost>
                 </Stack>
             </Stack>
@@ -68,14 +67,14 @@ export const TimeRangeEditView = ({value, config = null, onChange}: TimeRangeEdi
                             copy.setFullYear(d.getFullYear());
                             copy.setMonth(d.getMonth());
                             copy.setDate(d.getDate());
-                            onChange?.({type: CustomFieldTypeName.TimeRange, low: start_date.toISOString(), high: copy.toISOString()})
+                            onChange?.({type: CustomFieldType.TimeRange, low: start_date.toISOString(), high: copy.toISOString()})
                         }}
                     />
                     <TimeInput value={finish_date} onChange={d => {
-                        onChange?.({type: CustomFieldTypeName.TimeRange, low: start_date.toISOString(), high: d.toISOString()});
+                        onChange?.({type: CustomFieldType.TimeRange, low: start_date.toISOString(), high: d.toISOString()});
                     }}/>
                     <TooltipHost content="sets the time to this current moment">
-                        <DefaultButton text="Now" onClick={() => onChange?.({type: CustomFieldTypeName.TimeRange, low: start_date.toISOString(), high: (new Date()).toISOString()})}/>
+                        <DefaultButton text="Now" onClick={() => onChange?.({type: CustomFieldType.TimeRange, low: start_date.toISOString(), high: (new Date()).toISOString()})}/>
                     </TooltipHost>
                 </Stack>
             </Stack>
@@ -85,8 +84,8 @@ export const TimeRangeEditView = ({value, config = null, onChange}: TimeRangeEdi
 }
 
 interface TimeRangeReadViewProps {
-    value: TimeRange
-    config?: TimeRangeField
+    value: TimeRangeValue
+    config?: TimeRangeConfig
 }
 
 export const TimeRangeReadView = ({value, config}: TimeRangeReadViewProps) => {

@@ -1,9 +1,7 @@
 import { json } from "../../request";
-import { Vec } from "../../rust_types";
 import { unixTimeStrFromDate } from "../../util/time";
 import { urlFromString } from "../../util/url";
-import { CustomFieldEntryType } from "../custom_field_entry_types";
-import { ComposedEntry } from "../types";
+import { ComposedEntry, CustomFieldValue } from "../types";
 
 export * as id from "./entry_id";
 
@@ -46,7 +44,7 @@ export async function get({
         url.searchParams.append("to_marker", query.to_marker.toString());
     }
 
-    return await json.get<Vec<ComposedEntry>>(url);
+    return await json.get<ComposedEntry[]>(url);
 }
 
 export interface PostEntry {
@@ -55,7 +53,7 @@ export interface PostEntry {
 
 export interface PostCustomFieldEntry {
     field: number,
-    value: CustomFieldEntryType,
+    value: CustomFieldValue,
     comment?: string
 }
 

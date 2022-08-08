@@ -1,6 +1,5 @@
 import React from "react"
-import { CustomFieldTypeName } from "../../apiv2/custom_field_types"
-import { CustomField, ComposedEntry } from "../../apiv2/types"
+import { CustomField, ComposedEntry, CustomFieldType } from "../../apiv2/types"
 import FloatGraph from "./Float"
 import FloatRangeGraph from "./FloatRange"
 import IntegerGraph from "./Integer"
@@ -23,17 +22,17 @@ export function CustomFieldGraph({
     width, height
 }: CustomFieldGraphProps) {
     switch (field.config.type) {
-        case CustomFieldTypeName.Integer:
+        case CustomFieldType.Integer:
             return <IntegerGraph width={width} height={height} field={field} entries={entries}/>
-        case CustomFieldTypeName.IntegerRange:
+        case CustomFieldType.IntegerRange:
             return <IntegerRangeGraph width={width} height={height} field={field} entries={entries}/>
-        case CustomFieldTypeName.Float:
+        case CustomFieldType.Float:
             return <FloatGraph width={width} height={height} field={field} entries={entries}/>
-        case CustomFieldTypeName.FloatRange:
+        case CustomFieldType.FloatRange:
             return <FloatRangeGraph width={width} height={height} field={field} entries={entries}/>
-        case CustomFieldTypeName.Time:
+        case CustomFieldType.Time:
             return <TimeGraph width={width} height={height} field={field} entries={entries}/>
-        case CustomFieldTypeName.TimeRange:
+        case CustomFieldType.TimeRange:
             return <TimeRangeGraph width={width} height={height} field={field} entries={entries}/>
     }
 }

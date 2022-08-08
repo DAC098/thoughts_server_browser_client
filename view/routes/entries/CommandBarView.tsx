@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react"
 import { CommandBar, DatePicker, Dropdown, ICommandBarItemProps, IconButton, IContextualMenuItem, IDropdownOption, Label, ScrollablePane, Stack, Sticky, StickyPositionType, Text } from "@fluentui/react"
-import { useHistory, useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
 import { downloadLink } from "../../util/downloadLink"
@@ -66,7 +66,7 @@ export function CommandBarView({
     const entries_state = useAppSelector(state => state.entries);
     const custom_fields_state = useAppSelector(state => state.custom_fields);
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const appDispatch = useAppDispatch();
     const dispatch = useContext(EntriesViewContext);
@@ -163,7 +163,7 @@ export function CommandBarView({
                     url.searchParams.append("to", unixTimeFromDate(to_date).toString());
                 }
 
-                history.push(noOriginUrlString(url));
+                navigate(noOriginUrlString(url));
                 appDispatch(entries_actions.fetchEntries({user_id, query: {from: from_date, to: to_date}}));
             }
         }
@@ -175,7 +175,7 @@ export function CommandBarView({
             text: "New Entry",
             iconProps: {iconName: "Add"},
             onClick: () => {
-                history.push(
+                navigate(
                     `/entries/0?prev=${stringFromLocation(window.location, {encode: true, decode_search: true})}`
                 );
             }

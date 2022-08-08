@@ -2,10 +2,10 @@ import { DefaultButton, Dialog, DialogFooter, DialogType, Dropdown, IconButton, 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
 import { Reducer, useEffect, useReducer } from "react";
-import { useHistory, useLocation, useParams } from "react-router";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import apiv2 from "../../../apiv2";
-import { CustomFieldTypeName, makeCustomFieldType, CustomFieldType } from "../../../apiv2/custom_field_types";
-import { CustomField, cloneCustomField, newCustomField, GlobalCustomField, cloneGlobalCustomField, newGlobalCustomField } from "../../../apiv2/types";
+import { CustomField, CustomFieldType, GlobalCustomField, CustomFieldConfig } from "../../../apiv2/types";
+import { cloneCustomField, createCustomField, createCustomFieldConfig, createGlobalCustomField, cloneGlobalCustomField } from "../../../apiv2/types/methods"
 import { CustomFieldTypeEditView } from "../../../components/custom_fields";
 import OverlayedPage from "../../../components/OverlayedPage";
 import { SliceActionTypes } from "../../../redux/types";
@@ -65,16 +65,16 @@ const fieldStateSlice = createSlice({
             state.changes_made = false;
         },
         new_field: (state) => {
-            state.original = newGlobalCustomField(CustomFieldTypeName.Integer);
-            state.current = newGlobalCustomField(CustomFieldTypeName.Integer);
+            state.original = createGlobalCustomField(CustomFieldType.Integer);
+            state.current = createGlobalCustomField(CustomFieldType.Integer);
             state.changes_made = false;
         },
 
-        change_config_type: (state, action: PayloadAction<CustomFieldTypeName>) => {
-            state.current.config = makeCustomFieldType(action.payload);
+        change_config_type: (state, action: PayloadAction<CustomFieldType>) => {
+            state.current.config = createCustomFieldConfig(action.payload);
             state.changes_made = true;
         },
-        update_config: (state, action: PayloadAction<CustomFieldType>) => {
+        update_config: (state, action: PayloadAction<CustomFieldConfig>) => {
             state.current.config = action.payload;
             state.changes_made = true;
         },
@@ -101,7 +101,7 @@ interface GlobalCustomFieldIdViewProps {}
 
 const GlobalCustomFieldIdView = ({}: GlobalCustomFieldIdViewProps) => {
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const params = useParams<{field_id: string}>();
     const [state, dispatch] = useReducer<FieldStateReducer>(
         fieldStateSlice.reducer,
@@ -150,10 +150,10 @@ const GlobalCustomFieldIdView = ({}: GlobalCustomFieldIdViewProps) => {
                 post: state.current
             }).then(res => {
                 let field = res.body.data;
-                history.replace(stringFromLocation({
+                navigate(stringFromLocation({
                     ...location,
                     pathname: `/global/custom_fields/${field.id}`
-                }));
+                }), {replace: true});
                 dispatch(reducer_actions.set_field(field));
             })
         }
@@ -178,12 +178,12 @@ const GlobalCustomFieldIdView = ({}: GlobalCustomFieldIdViewProps) => {
             let url = urlFromLocation(location);
 
             if (url.searchParams.has("prev")) {
-                history.push(url.searchParams.get("prev"))
+                navigate(url.searchParams.get("prev"))
             } else {
                 let new_path = location.pathname.split("/");
                 new_path.pop();
 
-                history.push(stringFromLocation({
+                navigate(stringFromLocation({
                     ...location,
                     pathname: new_path.join("/")
                 }))
@@ -201,7 +201,7 @@ const GlobalCustomFieldIdView = ({}: GlobalCustomFieldIdViewProps) => {
 
     let options: IDropdownOption[] = [];
 
-    for (let key in CustomFieldTypeName) {
+    for (let key in CustomFieldType) {
         options.push({
             key,
             text: key,
@@ -225,7 +225,7 @@ const GlobalCustomFieldIdView = ({}: GlobalCustomFieldIdViewProps) => {
                             options={options}
                             disabled={!state.edit_view}
                             onChange={(e, o, i) => {
-                                dispatch(reducer_actions.change_config_type(o.key as CustomFieldTypeName));
+                                dispatch(reducer_actions.change_config_type(o.key as CustomFieldType));
                             }}
                         />
                         <IconButton
@@ -285,12 +285,12 @@ const GlobalCustomFieldIdView = ({}: GlobalCustomFieldIdViewProps) => {
                     let url = urlFromLocation(location);
 
                     if (url.searchParams.has("prev")) {
-                        history.push(url.searchParams.get("prev"))
+                        navigate(url.searchParams.get("prev"))
                     } else {
                         let new_path = location.pathname.split("/");
                         new_path.pop();
 
-                        history.push(stringFromLocation({
+                        navigate(stringFromLocation({
                             ...location,
                             pathname: new_path.join("/")
                         }))

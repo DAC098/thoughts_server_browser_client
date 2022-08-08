@@ -4,8 +4,7 @@ import { AxisLeft, AxisBottom } from '@visx/axis'
 import { GridRows, GridColumns } from '@visx/grid'
 import { scaleTime, scaleLinear } from '@visx/scale'
 import * as CurveType from "@visx/curve"
-import { Integer } from "../../apiv2/custom_field_entry_types";
-import { CustomField, ComposedEntry } from "../../apiv2/types";
+import { CustomField, ComposedEntry, IntegerValue } from "../../apiv2/types";
 import { CircleMarker, TransCircleMarker } from "./markers"
 import { DashedLinePath, SolidLinePath } from "./line_paths"
 import { defaultGetX } from "./getters"
@@ -14,7 +13,7 @@ import { entryIterator } from "./util"
 export const background = '#f3f3f3';
 
 const getY = (entry: ComposedEntry, field_id: string) => {
-    return (entry.custom_field_entries[field_id].value as Integer).value;
+    return (entry.custom_field_entries[field_id].value as IntegerValue).value;
 }
 
 const defaultMargin = { top: 40, right: 30, bottom: 50, left: 40 };
@@ -43,7 +42,7 @@ export default function IntegerGraph({
         min_x, min_y,
         max_x, max_y,
         data_groups
-    } = entryIterator<Integer>(entries, field, (rtn, entry, field, value) => {
+    } = entryIterator<IntegerValue>(entries, field, (rtn, entry, field, value) => {
         if (rtn.min_y > value.value) {
             rtn.min_y = value.value;
         }

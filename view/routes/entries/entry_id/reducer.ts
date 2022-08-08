@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createContext, Dispatch, Reducer } from "react"
 import apiv2 from "../../../apiv2";
-import { CustomFieldEntryType } from "../../../apiv2/custom_field_entry_types";
-import { cloneComposedEntry, ComposedEntry, newComposedEntry, newCustomFieldEntry, newTextEntry, CustomFieldEntry, TextEntry, EntryMarker, newEntryMarker, AudioEntry, newAudioEntry } from "../../../apiv2/types"
+import { CustomFieldValue, ComposedEntry, CustomFieldEntry, TextEntry, EntryMarker, AudioEntry } from "../../../apiv2/types"
+import { cloneComposedEntry, createComposedEntry, createCustomFieldEntry, createTextEntry, createEntryMarker, createAudioEntry } from "../../../apiv2/types/methods"
 import RequestError from "../../../error/RequestError";
 import { store } from "../../../redux/store";
 import { SliceActionTypes } from "../../../redux/types";
@@ -99,14 +99,14 @@ export const entryIdViewSlice = createSlice({
             today.setSeconds(0);
             today.setMilliseconds(0);
 
-            state.original = newComposedEntry();
+            state.original = createComposedEntry();
             state.original.entry.day = unixTimeFromDate(today);
-            state.current = newComposedEntry();
+            state.current = createComposedEntry();
             state.current.entry.day = cloneInteger(state.original.entry.day);
             state.changes_made = true;
 
             for (let field of store_state.custom_fields.custom_fields) {
-                let custom_field_entry = newCustomFieldEntry(field.config.type);
+                let custom_field_entry = createCustomFieldEntry(field.config.type);
                 custom_field_entry.field = field.id;
                 state.current.custom_field_entries[field.id] = custom_field_entry;
             }
@@ -125,13 +125,13 @@ export const entryIdViewSlice = createSlice({
                 return;
             }
 
-            let custom_field_entry = newCustomFieldEntry(field.config.type);
+            let custom_field_entry = createCustomFieldEntry(field.config.type);
             custom_field_entry.field = field.id;
 
             state.current.custom_field_entries[field.id] = custom_field_entry;
             state.changes_made = true;
         },
-        update_custom_field_entry: (state, action: PayloadAction<{index: number, comment: string, value: CustomFieldEntryType}>) => {
+        update_custom_field_entry: (state, action: PayloadAction<{index: number, comment: string, value: CustomFieldValue}>) => {
             state.current.custom_field_entries[action.payload.index].comment = action.payload.comment;
             state.current.custom_field_entries[action.payload.index].value = action.payload.value;
             state.changes_made = true;
@@ -149,7 +149,7 @@ export const entryIdViewSlice = createSlice({
                     continue;
                 }
 
-                let custom_field_entry = newCustomFieldEntry(field.config.type);
+                let custom_field_entry = createCustomFieldEntry(field.config.type);
                 custom_field_entry.field = field.id;
 
                 state.current.custom_field_entries[field.id] = custom_field_entry;
@@ -165,7 +165,7 @@ export const entryIdViewSlice = createSlice({
                     continue;
                 }
 
-                let custom_field_entry = newCustomFieldEntry(field.config.type);
+                let custom_field_entry = createCustomFieldEntry(field.config.type);
                 custom_field_entry.field = field.id;
 
                 state.current.custom_field_entries[field.id] = custom_field_entry;
@@ -181,7 +181,7 @@ export const entryIdViewSlice = createSlice({
                     continue;
                 }
 
-                let custom_field_entry = newCustomFieldEntry(field.config.type);
+                let custom_field_entry = createCustomFieldEntry(field.config.type);
                 custom_field_entry.field = field.id;
 
                 state.current.custom_field_entries[field.id] = custom_field_entry;
@@ -190,7 +190,7 @@ export const entryIdViewSlice = createSlice({
         },
 
         create_text_entry: (state) => {
-            let text_entry: TextEntryUI = newTextEntry();
+            let text_entry: TextEntryUI = createTextEntry();
             text_entry.key = unixNow();
 
             state.current.text_entries.push(text_entry);
@@ -207,7 +207,7 @@ export const entryIdViewSlice = createSlice({
         },
 
         create_audio_entry: (state) => {
-            let audio_entry: AudioEntryUI = newAudioEntry();
+            let audio_entry: AudioEntryUI = createAudioEntry();
             audio_entry.key = unixNow();
 
             state.audio_entries.push({
@@ -225,7 +225,7 @@ export const entryIdViewSlice = createSlice({
         },
 
         create_entry_marker: (state) => {
-            let entry_marker: EntryMarkerUI = newEntryMarker();
+            let entry_marker: EntryMarkerUI = createEntryMarker();
             entry_marker.key = unixNow();
 
             state.current.markers.push(entry_marker);

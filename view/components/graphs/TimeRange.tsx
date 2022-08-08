@@ -5,9 +5,7 @@ import { Threshold } from '@visx/threshold'
 import { scaleTime } from '@visx/scale'
 import { AxisLeft, AxisBottom } from '@visx/axis'
 import { GridRows, GridColumns } from '@visx/grid'
-import { TimeRange as TimeRangeField } from "../../apiv2/custom_field_types"
-import { TimeRange } from "../../apiv2/custom_field_entry_types"
-import { CustomField, ComposedEntry } from '../../apiv2/types'
+import { CustomField, ComposedEntry, TimeRangeValue, TimeRangeConfig } from '../../apiv2/types'
 import { getDateZeroHMSM, timeToString } from '../../util/time'
 import { CircleMarker, TransCircleMarker } from './markers'
 import { DashedLinePath, SolidLinePath } from './line_paths'
@@ -17,11 +15,11 @@ import { entryIterator } from './util'
 export const background = '#f3f3f3';
 
 const getY0 = (entry: ComposedEntry, field_id: string) => {
-    return new Date((entry.custom_field_entries[field_id].value as TimeRange).low).getTime();
+    return new Date((entry.custom_field_entries[field_id].value as TimeRangeValue).low).getTime();
 }
 
 const getY1 = (entry: ComposedEntry, field_id: string) => {
-    return new Date((entry.custom_field_entries[field_id].value as TimeRange).high).getTime();
+    return new Date((entry.custom_field_entries[field_id].value as TimeRangeValue).high).getTime();
 }
 
 const getY = (entry: ComposedEntry, field_id: string) => {
@@ -48,14 +46,14 @@ export default function TimeRangeGraph({
 }: TimeRangeGraphProps) {
     if (width < 10) return null;
 
-    let field_config = field.config as TimeRangeField;
+    let field_config = field.config as TimeRangeConfig;
     let field_id = field.id.toString();
 
     const {
         min_x, min_y,
         max_x, max_y,
         data_groups
-    } = entryIterator<TimeRange>(entries, field, (rtn, entry, field, value) => {
+    } = entryIterator<TimeRangeValue>(entries, field, (rtn, entry, field, value) => {
         let low = new Date(value.low).getTime();
         let high = new Date(value.high).getTime();
 

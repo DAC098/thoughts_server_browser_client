@@ -1,16 +1,3 @@
 {
-    "compilerOptions": {
-        "module": "esnext",
-        "moduleResolution": "node",
-        "target": "ES2019",
-        "lib": ["ES2019","DOM"],
-        "sourceMap": true,
-        "outDir": "./dist",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "jsx": "react"
-    },
-    "include": [
-        "./view/**/*"
-    ]
+    "extends": "./tsconfig.development.json"
 }

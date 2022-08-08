@@ -1,7 +1,7 @@
 import { CommandBar, ScrollablePane, ShimmeredDetailsList, Stack, Sticky, StickyPositionType } from "@fluentui/react";
 import React from "react";
 import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router"
+import { useNavigate, useLocation } from "react-router"
 import { Link } from "react-router-dom";
 import apiv2 from "../../../apiv2";
 import { GlobalCustomField } from "../../../apiv2/types";
@@ -10,7 +10,7 @@ import { stringFromLocation } from "../../../util/url";
 export interface GlobalCustomFieldsViewProps {}
 
 const GlobalCustomFieldsView = ({}: GlobalCustomFieldsViewProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const [global_custom_fields, setGlobalCustomFields] = useState<GlobalCustomField[]>([]);
@@ -48,7 +48,7 @@ const GlobalCustomFieldsView = ({}: GlobalCustomFieldsViewProps) => {
                         key: "new_field",
                         text: "New Field",
                         iconProps: {iconName: "Add"},
-                        onClick: () => history.push(`/global/custom_fields/0?prev=${stringFromLocation(location, {encode: true})}`)
+                        onClick: () => navigate(`/global/custom_fields/0?prev=${stringFromLocation(location, {encode: true})}`)
                     }
                 ]}/>
             </Sticky>

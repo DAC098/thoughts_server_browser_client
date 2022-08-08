@@ -1,10 +1,10 @@
 import { Stack, ScrollablePane, Sticky, StickyPositionType, CommandBar, Spinner, DetailsList, ShimmeredDetailsList } from "@fluentui/react";
 import React, { useEffect, useState } from "react"
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { json } from "../../../request";
 
 const AdminUserListView = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     let [user_list, setUserList] = useState([]);
     let [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ const AdminUserListView = () => {
                             text: "New User",
                             iconProps: {iconName: "Add"},
                             onClick: () => {
-                                history.push("/admin/users/0");
+                                navigate("/admin/users/0");
                             }
                         }
                     ]}/>
@@ -80,9 +80,13 @@ const AdminUserListView = () => {
                     }}
                 ]}
                 onRenderDetailsHeader={(p,d) => {
-                    return <Sticky stickyPosition={StickyPositionType.Header}>
-                        {d(p)}
-                    </Sticky>
+                    if (d != null) {
+                        return <Sticky stickyPosition={StickyPositionType.Header}>
+                            {d(p)}
+                        </Sticky>
+                    } else {
+                        return null;
+                    }
                 }}
             />
         </ScrollablePane>

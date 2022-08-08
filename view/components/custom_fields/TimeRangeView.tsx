@@ -1,20 +1,20 @@
 import { Stack, Toggle } from "@fluentui/react";
 import React from "react"
-import { CustomFieldTypeName, TimeRange } from "../../apiv2/custom_field_types";
+import { CustomFieldType, TimeRangeConfig } from "../../apiv2/types";
 
 interface TimeRangeEditViewProps {
-    config: TimeRange
+    config: TimeRangeConfig
 
-    onChange?: (config: TimeRange) => void
+    onChange?: (config: TimeRangeConfig) => void
 }
 
 export const TimeRangeEditView = ({config, onChange}: TimeRangeEditViewProps) => {
     return <Stack horizontal tokens={{childrenGap: 8}}>
         <Toggle label="As 12hr clock" onText="On" offText="Off" checked={config.as_12hr} onChange={(e,c) => 
-            onChange?.({type: CustomFieldTypeName.TimeRange, as_12hr: c, show_diff: config.show_diff})
+            onChange?.({type: CustomFieldType.TimeRange, as_12hr: c, show_diff: config.show_diff})
         }/>
         <Toggle label="Show Time Difference" onText="On" offText="Off" checked={config.show_diff} onChange={(e,c) => 
-            onChange?.({type: CustomFieldTypeName.TimeRange, as_12hr: config.as_12hr, show_diff: c})
+            onChange?.({type: CustomFieldType.TimeRange, as_12hr: config.as_12hr, show_diff: c})
         }/>
     </Stack>
 }

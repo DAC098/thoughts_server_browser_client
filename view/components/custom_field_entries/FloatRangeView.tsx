@@ -1,11 +1,10 @@
 import { SpinButton, Stack, Text } from "@fluentui/react";
 import React from "react"
-import { FloatRange } from "../../apiv2/custom_field_entry_types";
-import { FloatRange as FloatRangeField, CustomFieldTypeName} from "../../apiv2/custom_field_types"
+import { FloatRangeValue, FloatRangeConfig, CustomFieldType } from "../../apiv2/types";
 
 interface DetailsTextProps {
-    value: FloatRange
-    config?: FloatRangeField
+    value: FloatRangeValue
+    config?: FloatRangeConfig
 }
 
 const DetailsText = ({value, config}: DetailsTextProps) => {
@@ -32,10 +31,10 @@ const DetailsText = ({value, config}: DetailsTextProps) => {
 }
 
 interface FloatRangeEditViewProps {
-    value: FloatRange
-    config?: FloatRangeField
+    value: FloatRangeValue
+    config?: FloatRangeConfig
 
-    onChange?: (value: FloatRange) => void
+    onChange?: (value: FloatRangeValue) => void
 }
 
 export const FloatRangeEditView = ({value, config = null, onChange}: FloatRangeEditViewProps) => {
@@ -52,7 +51,7 @@ export const FloatRangeEditView = ({value, config = null, onChange}: FloatRangeE
                     let float = parseFloat(v);
 
                     if (!isNaN(float) && float <= value.high) {
-                        onChange?.({type: CustomFieldTypeName.FloatRange, low: float, high: value.high});
+                        onChange?.({type: CustomFieldType.FloatRange, low: float, high: value.high});
                     }
                 }}
             />
@@ -67,7 +66,7 @@ export const FloatRangeEditView = ({value, config = null, onChange}: FloatRangeE
                     let float = parseFloat(v);
 
                     if (!isNaN(float) && float >= value.low) {
-                        onChange?.({type: CustomFieldTypeName.FloatRange, low: value.low, high: float});
+                        onChange?.({type: CustomFieldType.FloatRange, low: value.low, high: float});
                     }
                 }}
             />
@@ -77,8 +76,8 @@ export const FloatRangeEditView = ({value, config = null, onChange}: FloatRangeE
 }
 
 interface FloatRangeReadViewProps {
-    value: FloatRange
-    config?: FloatRangeField
+    value: FloatRangeValue
+    config?: FloatRangeConfig
 }
 
 export const FloatRangeReadView = ({value, config}: FloatRangeReadViewProps) => {

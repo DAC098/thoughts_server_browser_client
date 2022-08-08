@@ -1,6 +1,6 @@
 import { IconButton, Persona, Stack } from "@fluentui/react";
 import React, { useEffect, useState } from "react"
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { } from "../apiv2/types"
 import api from "../apiv2";
 
@@ -9,7 +9,7 @@ const Users = () => {
     let [given, setGiven] = useState<any[]>([]);
     let [loading, setLoading] = useState(false);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const fetchUserList = () => {
         if (loading) {
@@ -47,17 +47,17 @@ const Users = () => {
                                 {
                                     key: "entries",
                                     text: "Entries",
-                                    onClick: () => history.push(`/users/${v.id}/entries`)
+                                    onClick: () => navigate(`/users/${v.id}/entries`)
                                 },
                                 {
                                     key: "custom_fields",
                                     text: "Fields",
-                                    onClick: () => history.push(`/users/${v.id}/custom_fields`)
+                                    onClick: () => navigate(`/users/${v.id}/custom_fields`)
                                 },
                                 {
                                     key: "tags",
                                     text: "Tags",
-                                    onClick: () => history.push(`/users/${v.id}/tags`)
+                                    onClick: () => navigate(`/users/${v.id}/tags`)
                                 }
                             ]
                         }}

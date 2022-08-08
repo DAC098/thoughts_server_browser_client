@@ -4,8 +4,7 @@ import { Threshold } from '@visx/threshold'
 import { scaleTime, scaleLinear } from '@visx/scale'
 import { AxisLeft, AxisBottom } from '@visx/axis'
 import { GridRows, GridColumns } from '@visx/grid'
-import { FloatRange } from "../../apiv2/custom_field_entry_types"
-import { CustomField, ComposedEntry } from '../../apiv2/types'
+import { CustomField, ComposedEntry, FloatRangeValue } from '../../apiv2/types'
 import { DashedLinePath, SolidLinePath } from './line_paths'
 import { CircleMarker } from './markers'
 import { defaultGetX } from './getters'
@@ -15,11 +14,11 @@ import { entryIterator } from './util'
 export const background = '#f3f3f3';
 
 const getY0 = (entry: ComposedEntry, field_id: string) => {
-    return (entry.custom_field_entries[field_id].value as FloatRange).low;
+    return (entry.custom_field_entries[field_id].value as FloatRangeValue).low;
 }
 
 const getY1 = (entry: ComposedEntry, field_id: string) => {
-    return (entry.custom_field_entries[field_id].value as FloatRange).high;
+    return (entry.custom_field_entries[field_id].value as FloatRangeValue).high;
 }
 
 const defaultMargin = { top: 40, right: 30, bottom: 50, left: 40 };
@@ -48,7 +47,7 @@ export default function FloatRangeGraph({
         min_x, min_y,
         max_x, max_y,
         data_groups
-    } = entryIterator<FloatRange>(entries, field, (rtn, entry, field, value) => {
+    } = entryIterator<FloatRangeValue>(entries, field, (rtn, entry, field, value) => {
         if (rtn.min_y > value.low) {
             rtn.min_y = value.low;
         }

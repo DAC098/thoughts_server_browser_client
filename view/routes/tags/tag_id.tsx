@@ -1,9 +1,10 @@
 import { ColorPicker, DefaultButton, Dialog, DialogFooter, DialogType, IconButton, ScrollablePane, Stack, Sticky, StickyPositionType, SwatchColorPicker, TextField, Toggle } from "@fluentui/react"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import React, { Reducer, useEffect, useReducer } from "react"
-import { useHistory, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router-dom"
 import api from "../../apiv2"
-import { cloneTag, newTag, Tag } from "../../apiv2/types"
+import { Tag } from "../../apiv2/types"
+import { cloneTag, createTag } from "../../apiv2/types/methods"
 import OverlayedPage from "../../components/OverlayedPage"
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
@@ -86,8 +87,8 @@ interface TagsIDViewState {
 
 function makeInitialState(): TagsIDViewState {
     return {
-        original: newTag(),
-        current: newTag(),
+        original: createTag(),
+        current: createTag(),
 
         loading: false,
         sending: false,
@@ -104,8 +105,8 @@ const tagsIDViewSlice = createSlice({
     initialState: makeInitialState(),
     reducers: {
         new_tag: (state) => {
-            state.original = newTag();
-            state.current = newTag();
+            state.original = createTag();
+            state.current = createTag();
             state.changes_made = false;
         },
         set_tag: (state, action: PayloadAction<Tag>) => {
@@ -158,7 +159,7 @@ interface TagsIDViewProps {
 
 const TagsIDView = ({}: TagsIDViewProps) => {
     const params = useParams<{tag_id: string}>();
-    const history = useHistory();
+    const navigate = useNavigate();
     const tags_state = useAppSelector(state => state.tags);
     const app_dispatch = useAppDispatch();
 
@@ -212,7 +213,7 @@ const TagsIDView = ({}: TagsIDViewProps) => {
             }).then(res => {
                 let tag = res.body.data;
                 app_dispatch(tags_actions.add_tag(tag));
-                history.push(`/tags/${tag.id}`);
+                navigate(`/tags/${tag.id}`);
             })
         }
 
@@ -234,7 +235,7 @@ const TagsIDView = ({}: TagsIDViewProps) => {
 
         api.tags.id.del({id: state.current.id}).then(() => {
             app_dispatch(tags_actions.delete_tag(state.current.id));
-            history.push("/tags");
+            navigate("/tags");
         }).catch(e => {
             console.error(e);
             dispatch(reducer_actions.set_deleting(false));
@@ -307,7 +308,7 @@ const TagsIDView = ({}: TagsIDViewProps) => {
                             let new_path = location.pathname.split("/");
                             new_path.pop();
 
-                            history.push(new_path.join("/"));
+                            navigate(new_path.join("/"));
                         }}
                     />
                 </Stack>

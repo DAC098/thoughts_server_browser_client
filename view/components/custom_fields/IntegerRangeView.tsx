@@ -1,12 +1,12 @@
 import { Stack, Toggle, SpinButton, Label } from "@fluentui/react";
 import React from "react"
-import { IntegerRange, CustomFieldTypeName } from "../../apiv2/custom_field_types"
+import { IntegerRangeConfig, CustomFieldType } from "../../apiv2/types"
 import { optionalCloneInteger } from "../../util/clone";
 
 interface IntegerRangeEditViewProps {
-    config: IntegerRange
+    config: IntegerRangeConfig
 
-    onChange?: (config: IntegerRange) => void
+    onChange?: (config: IntegerRangeConfig) => void
 }
 
 export const IntegerRangeEditView = ({config, onChange}: IntegerRangeEditViewProps) => {
@@ -15,14 +15,14 @@ export const IntegerRangeEditView = ({config, onChange}: IntegerRangeEditViewPro
             <Label>Minimum</Label>
             <Stack horizontal verticalAlign="center" tokens={{childrenGap: 8}}>
                 <Toggle checked={config.minimum != null} onChange={(e,c) => {
-                    onChange?.({type: CustomFieldTypeName.IntegerRange, minimum: c ? 0 : null, maximum: optionalCloneInteger(config.maximum)});
+                    onChange?.({type: CustomFieldType.IntegerRange, minimum: c ? 0 : null, maximum: optionalCloneInteger(config.maximum)});
                 }}/>
                 <SpinButton 
                     disabled={config.minimum == null}
                     value={config.minimum?.toString() ?? "0"}
                     onChange={(e,v) => {
                         let int = parseInt(v);
-                        onChange?.({type: CustomFieldTypeName.IntegerRange,minimum: int,maximum: optionalCloneInteger(config.maximum)});
+                        onChange?.({type: CustomFieldType.IntegerRange,minimum: int,maximum: optionalCloneInteger(config.maximum)});
                     }}
                 />
             </Stack>
@@ -31,14 +31,14 @@ export const IntegerRangeEditView = ({config, onChange}: IntegerRangeEditViewPro
             <Label>Maximum</Label>
             <Stack horizontal verticalAlign="center" tokens={{childrenGap: 8}}>
                 <Toggle checked={config.maximum != null} onChange={(e,c) => {
-                    onChange?.({type: CustomFieldTypeName.IntegerRange, minimum: optionalCloneInteger(config.minimum), maximum: c ? 0 : null});
+                    onChange?.({type: CustomFieldType.IntegerRange, minimum: optionalCloneInteger(config.minimum), maximum: c ? 0 : null});
                 }}/>
                 <SpinButton
                     disabled={config.maximum == null}
                     value={config.maximum?.toString() ?? "0"}
                     onChange={(e,v) => {
                         let int = parseInt(v);
-                        onChange?.({type: CustomFieldTypeName.IntegerRange, minimum: optionalCloneInteger(config.minimum), maximum: int});
+                        onChange?.({type: CustomFieldType.IntegerRange, minimum: optionalCloneInteger(config.minimum), maximum: int});
                     }}
                 />
             </Stack>

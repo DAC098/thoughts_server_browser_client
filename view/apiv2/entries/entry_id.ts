@@ -1,7 +1,6 @@
-import { CustomFieldEntryType } from "../../apiv2/custom_field_entry_types";
 import { json } from "../../request";
 import { urlFromString } from "../../util/url";
-import { ComposedEntry } from "../types";
+import { ComposedEntry, CustomFieldValue } from "../types";
 
 export interface GetEntryIdArgs {
     id: number | string
@@ -25,7 +24,7 @@ export interface PutTextEntry {
 
 export interface PutCustomFieldEntry {
     field: number
-    value: CustomFieldEntryType
+    value: CustomFieldValue
     comment?: string
 }
 

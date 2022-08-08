@@ -1,15 +1,15 @@
 import React from "react"
-import { CustomFieldEntryType } from "../../apiv2/custom_field_entry_types"
-import { 
-    CustomFieldType, 
-    CustomFieldTypeName,
-    Integer as IntegerField,
-    IntegerRange as IntegerRangeField,
-    Float as FloatField,
-    FloatRange as FloatRangeField,
-    Time as TimeField,
-    TimeRange as TimeRangeField
-} from "../../apiv2/custom_field_types"
+import {
+    CustomFieldValue,
+    CustomFieldType,
+    IntegerConfig,
+    IntegerRangeConfig,
+    FloatConfig,
+    FloatRangeConfig,
+    TimeConfig,
+    TimeRangeConfig,
+    CustomFieldConfig
+} from "../../apiv2/types"
 import { FloatRangeEditView, FloatRangeReadView } from "./FloatRangeView"
 import { FloatEditView, FloatReadView } from "./FloatView"
 import { IntegerRangeEditView, IntegerRangeReadView } from "./IntegerRangeView"
@@ -18,89 +18,89 @@ import { TimeRangeEditView, TimeRangeReadView } from "./TimeRangeView"
 import { TimeEditView, TimeReadView } from "./TimeView"
 
 interface CustomFieldEntryTypeEditViewProps {
-    value: CustomFieldEntryType
-    config?: CustomFieldType
+    value: CustomFieldValue
+    config?: CustomFieldConfig
 
-    onChange?: (value: CustomFieldEntryType) => void
+    onChange?: (value: CustomFieldValue) => void
 }
 
 export const CustomFieldEntryTypeEditView = ({value, config, onChange}: CustomFieldEntryTypeEditViewProps) => {
     switch (value.type) {
-        case CustomFieldTypeName.Integer:
+        case CustomFieldType.Integer:
             return <IntegerEditView 
                 value={value} 
-                config={(config as IntegerField)}
+                config={(config as IntegerConfig)}
                 onChange={onChange}
             />
-        case CustomFieldTypeName.IntegerRange:
+        case CustomFieldType.IntegerRange:
             return <IntegerRangeEditView
                 value={value}
-                config={(config as IntegerRangeField)}
+                config={(config as IntegerRangeConfig)}
                 onChange={onChange}
             />
-        case CustomFieldTypeName.Float:
+        case CustomFieldType.Float:
             return <FloatEditView
                 value={value}
-                config={(config as FloatField)}
+                config={(config as FloatConfig)}
                 onChange={onChange}
             />
-        case CustomFieldTypeName.FloatRange:
+        case CustomFieldType.FloatRange:
             return <FloatRangeEditView
                 value={value}
-                config={(config as FloatRangeField)}
+                config={(config as FloatRangeConfig)}
                 onChange={onChange}
             />
-        case CustomFieldTypeName.Time:
+        case CustomFieldType.Time:
             return <TimeEditView
                 value={value}
-                config={(config as TimeField)}
+                config={(config as TimeConfig)}
                 onChange={onChange}
             />
-        case CustomFieldTypeName.TimeRange:
+        case CustomFieldType.TimeRange:
             return <TimeRangeEditView
                 value={value}
-                config={(config as TimeRangeField)}
+                config={(config as TimeRangeConfig)}
                 onChange={onChange}
             />
     }
 }
 
 interface CustomFieldEntryTypeReadViewProps {
-    value: CustomFieldEntryType
-    config?: CustomFieldType
+    value: CustomFieldValue
+    config?: CustomFieldConfig
 }
 
 export const CustomFieldEntryTypeReadView = ({value, config}: CustomFieldEntryTypeReadViewProps) => {
     switch (value.type) {
-        case CustomFieldTypeName.Integer:
+        case CustomFieldType.Integer:
             return <IntegerReadView
                 value={value} 
-                config={(config as IntegerField)}
+                config={((config as unknown) as IntegerConfig)}
             />
-        case CustomFieldTypeName.IntegerRange:
+        case CustomFieldType.IntegerRange:
             return <IntegerRangeReadView
                 value={value}
-                config={(config as IntegerRangeField)}
+                config={((config as unknown) as IntegerRangeConfig)}
             />
-        case CustomFieldTypeName.Float:
+        case CustomFieldType.Float:
             return <FloatReadView
                 value={value}
-                config={(config as FloatField)}
+                config={((config as unknown) as FloatConfig)}
             />
-        case CustomFieldTypeName.FloatRange:
+        case CustomFieldType.FloatRange:
             return <FloatRangeReadView
                 value={value}
-                config={(config as FloatRangeField)}
+                config={((config as unknown) as FloatRangeConfig)}
             />
-        case CustomFieldTypeName.Time:
+        case CustomFieldType.Time:
             return <TimeReadView
                 value={value}
-                config={(config as TimeField)}
+                config={((config as unknown) as TimeConfig)}
             />
-        case CustomFieldTypeName.TimeRange:
+        case CustomFieldType.TimeRange:
             return <TimeRangeReadView
                 value={value}
-                config={(config as TimeRangeField)}
+                config={((config as unknown) as TimeRangeConfig)}
             />
     }
 }

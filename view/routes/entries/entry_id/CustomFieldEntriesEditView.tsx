@@ -1,7 +1,6 @@
 import { Stack, Separator, Label, IconButton, TextField } from "@fluentui/react";
 import React, { useContext } from "react";
-import { CustomFieldEntryType } from "../../../apiv2/custom_field_entry_types";
-import { CustomField, CustomFieldEntry } from "../../../apiv2/types";
+import { CustomField, CustomFieldEntry, CustomFieldValue } from "../../../apiv2/types";
 import { CustomFieldEntryTypeEditView } from "../../../components/custom_field_entries";
 import { EntryIdViewContext, entry_id_view_actions } from "./reducer";
 
@@ -10,7 +9,7 @@ interface CustomFieldEntryInputProps {
     entry: CustomFieldEntry
 
     onDelete?: () => void
-    onChange?: (entry: {comment: string, value: CustomFieldEntryType}) => void
+    onChange?: (entry: {comment: string, value: CustomFieldValue}) => void
 }
 
 const CustomFieldEntryInputs = ({

@@ -1,7 +1,6 @@
 import { json } from "../../../request";
 import { urlFromString } from "../../../util/url";
-import { CustomFieldType } from "../../custom_field_types";
-import { GlobalCustomField } from "../../types";
+import { GlobalCustomField, CustomFieldConfig } from "../../types";
 
 export interface GetGlobalCustomFieldsArgs {}
 
@@ -12,7 +11,7 @@ export async function get({}: GetGlobalCustomFieldsArgs) {
 export interface PostGlobalCustomField {
     name: string
     comment?: string
-    config: CustomFieldType
+    config: CustomFieldConfig
 }
 
 export interface PostGlobalCustomFieldsArgs {

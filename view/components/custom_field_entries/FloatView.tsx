@@ -1,11 +1,10 @@
 import React from "react"
 import { SpinButton, Stack, Text } from "@fluentui/react";
-import { Float } from "../../apiv2/custom_field_entry_types";
-import { Float as FloatField, CustomFieldTypeName} from "../../apiv2/custom_field_types"
+import { FloatValue, FloatConfig, CustomFieldType } from "../../apiv2/types";
 
 interface DetailsTextProps {
-    value: Float
-    config?: FloatField
+    value: FloatValue
+    config?: FloatConfig
 }
 
 const DetailsText = ({value, config}: DetailsTextProps) => {
@@ -32,10 +31,10 @@ const DetailsText = ({value, config}: DetailsTextProps) => {
 }
 
 interface FLoatEditViewProps {
-    value: Float
-    config?: FloatField
+    value: FloatValue
+    config?: FloatConfig
 
-    onChange?: (value: Float) => void
+    onChange?: (value: FloatValue) => void
 }
 
 export const FloatEditView = ({value, config = null, onChange}: FLoatEditViewProps) => {
@@ -51,7 +50,7 @@ export const FloatEditView = ({value, config = null, onChange}: FLoatEditViewPro
                     let float = parseFloat(v);
 
                     if (!isNaN(float)) {
-                        onChange?.({type: CustomFieldTypeName.Float, value: float});
+                        onChange?.({type: CustomFieldType.Float, value: float});
                     }
                 }}
             />
@@ -61,8 +60,8 @@ export const FloatEditView = ({value, config = null, onChange}: FLoatEditViewPro
 }
 
 interface FloatReadViewProps {
-    value: Float
-    config?: FloatField
+    value: FloatValue
+    config?: FloatConfig
 }
 
 export const FloatReadView = ({value, config}: FloatReadViewProps) => {

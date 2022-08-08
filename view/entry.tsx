@@ -1,6 +1,6 @@
 import React from "react"
 import { render } from "react-dom"
-import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import App from "./App"
 
 import "./request"
@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", e => {
     render(
         <Provider store={store}>
             <BrowserRouter basename="/">
-                <Switch>
-                    <Route path="/auth/login" exact component={Login}/>
-                    <Route path="/" component={App}/>
-                </Switch>
+                <Routes>
+                    <Route path="/auth/login" element={<Login/>}/>
+                    <Route path="*" element={<App/>}/>
+                </Routes>
             </BrowserRouter>
         </Provider>,
         document.getElementById("render-root")

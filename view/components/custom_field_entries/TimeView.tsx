@@ -1,13 +1,12 @@
 import { DatePicker, DefaultButton, Label, Stack, Text, TooltipHost } from "@fluentui/react";
 import React from "react"
-import { Time } from "../../apiv2/custom_field_entry_types";
-import { CustomFieldTypeName, Time as TimeField } from "../../apiv2/custom_field_types";
+import { TimeValue, TimeConfig, CustomFieldType } from "../../apiv2/types";
 import { displayDate } from "../../util/time";
 import TimeInput from "../TimeInput";
 
 interface DetailsTextProps {
-    value: Time
-    config?: TimeField
+    value: TimeValue
+    config?: TimeConfig
 }
 
 const DetailsText = ({value, config}: DetailsTextProps) => {
@@ -24,10 +23,10 @@ const DetailsText = ({value, config}: DetailsTextProps) => {
 }
 
 interface TimeEditViewProps {
-    value: Time
-    config?: TimeField
+    value: TimeValue
+    config?: TimeConfig
 
-    onChange?: (value: Time) => void
+    onChange?: (value: TimeValue) => void
 }
 
 export const TimeEditView = ({value, config = null, onChange}: TimeEditViewProps) => {
@@ -44,14 +43,14 @@ export const TimeEditView = ({value, config = null, onChange}: TimeEditViewProps
                         copy.setFullYear(d.getFullYear());
                         copy.setMonth(d.getMonth());
                         copy.setDate(d.getDate());
-                        onChange?.({type: CustomFieldTypeName.Time, value: copy.toISOString()});
+                        onChange?.({type: CustomFieldType.Time, value: copy.toISOString()});
                     }}
                 />
                 <TimeInput value={date} onChange={d => {
-                    onChange?.({type: CustomFieldTypeName.Time, value: d.toISOString()});
+                    onChange?.({type: CustomFieldType.Time, value: d.toISOString()});
                 }}/>
                 <TooltipHost content="sets the time to this current moment">
-                    <DefaultButton text="Now" onClick={() => onChange?.({type: CustomFieldTypeName.Time, value: (new Date()).toISOString()})}/>
+                    <DefaultButton text="Now" onClick={() => onChange?.({type: CustomFieldType.Time, value: (new Date()).toISOString()})}/>
                 </TooltipHost>
             </Stack>
         </Stack>
@@ -60,8 +59,8 @@ export const TimeEditView = ({value, config = null, onChange}: TimeEditViewProps
 }
 
 interface TimeReadViewProps {
-    value: Time
-    config?: TimeField
+    value: TimeValue
+    config?: TimeConfig
 }
 
 export const TimeReadView = ({value, config}: TimeReadViewProps) => {

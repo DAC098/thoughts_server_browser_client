@@ -1,9 +1,9 @@
 import { DefaultButton, Dialog, DialogFooter, DialogType, Dropdown, IconButton, IDropdownOption, Position, SpinButton, Stack, TextField } from "@fluentui/react"
 import React, { createContext, Dispatch, Reducer, useContext, useEffect, useReducer } from "react"
-import { useHistory, useLocation, useParams } from "react-router"
-import { cloneCustomField, newCustomField, CustomField } from "../../apiv2/types"
+import { useNavigate, useLocation, useParams } from "react-router-dom"
+import { CustomField, CustomFieldConfig, CustomFieldType } from "../../apiv2/types"
+import { cloneCustomField, createCustomField, createCustomFieldConfig } from "../../apiv2/types/methods"
 import { useUserId } from "../../hooks/useUserId"
-import { makeCustomFieldType, CustomFieldType, CustomFieldTypeName } from "../../apiv2/custom_field_types"
 import { CustomFieldTypeEditView } from "../../components/custom_fields"
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
@@ -66,16 +66,16 @@ const fieldStateSlice = createSlice({
             state.changes_made = false;
         },
         new_field: (state) => {
-            state.original = newCustomField(CustomFieldTypeName.Integer);
-            state.current = newCustomField(CustomFieldTypeName.Integer);
+            state.original = createCustomField(CustomFieldType.Integer);
+            state.current = createCustomField(CustomFieldType.Integer);
             state.changes_made = false;
         },
 
-        change_config_type: (state, action: PayloadAction<CustomFieldTypeName>) => {
-            state.current.config = makeCustomFieldType(action.payload);
+        change_config_type: (state, action: PayloadAction<CustomFieldType>) => {
+            state.current.config = createCustomFieldConfig(action.payload);
             state.changes_made = true;
         },
-        update_config: (state, action: PayloadAction<CustomFieldType>) => {
+        update_config: (state, action: PayloadAction<CustomFieldConfig>) => {
             state.current.config = action.payload;
             state.changes_made = true;
         },
@@ -105,8 +105,8 @@ type FieldStateReducer = Reducer<FieldState, FieldStateActionsTypes>;
 interface FieldIdViewProps {}
 
 const FieldIdView = ({}: FieldIdViewProps) => {
-    const location = useLocation<{field?: CustomField}>();
-    const history = useHistory();
+    const location = useLocation();
+    const navigate = useNavigate();
     const params = useParams<{field_id: string, user_id?: string}>();
     const custom_fields_state = useAppSelector(state => state.custom_fields);
     const appDispatch = useAppDispatch();
@@ -163,7 +163,7 @@ const FieldIdView = ({}: FieldIdViewProps) => {
                 post: state.current
             }).then(res => {
                 let field = res.body.data;
-                history.push(`/custom_fields/${field.id}`);
+                navigate(`/custom_fields/${field.id}`);
                 dispatch(reducer_actions.set_field(field));
                 appDispatch(custom_field_actions.add_field(field));
             });
@@ -187,7 +187,7 @@ const FieldIdView = ({}: FieldIdViewProps) => {
 
         apiv2.custom_fields.id.del({id: state.current.id}).then(() => {
             appDispatch(custom_field_actions.delete_field(state.current.id));
-            history.push("/custom_fields");
+            navigate("/custom_fields");
         }).catch((e) => {
             console.error(e);
             dispatch(reducer_actions.set_deleting(false));
@@ -218,7 +218,7 @@ const FieldIdView = ({}: FieldIdViewProps) => {
 
     let options: IDropdownOption[] = [];
 
-    for (let key in CustomFieldTypeName) {
+    for (let key in CustomFieldType) {
         options.push({
             key,
             text: key,
@@ -258,7 +258,7 @@ const FieldIdView = ({}: FieldIdViewProps) => {
                                 options={options}
                                 disabled={!state.edit_view}
                                 onChange={(e, o, i) => {
-                                    dispatch(reducer_actions.change_config_type(o.key as CustomFieldTypeName))
+                                    dispatch(reducer_actions.change_config_type(o.key as CustomFieldType))
                                 }}
                             />
                             {allow_edit ?
@@ -334,7 +334,7 @@ const FieldIdView = ({}: FieldIdViewProps) => {
                         let new_path = location.pathname.split("/");
                         new_path.pop();
 
-                        history.push(new_path.join("/"));
+                        navigate(new_path.join("/"));
                     }}
                 />
             </Stack>

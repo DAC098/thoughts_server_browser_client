@@ -10,12 +10,10 @@ import { TooltipWithBounds } from "@visx/tooltip"
 import GridColumns from "@visx/grid/lib/grids/GridColumns"
 import GridRows from "@visx/grid/lib/grids/GridRows"
 import ParentSize from "@visx/responsive/lib/components/ParentSize"
-import { CustomField, ComposedEntry, Tag } from "../../apiv2/types"
+import { CustomField, CustomFieldType, ComposedEntry, Tag, IntegerValue, IntegerRangeValue, FloatValue, FloatRangeValue, TimeValue, TimeRangeValue, TimeRangeConfig } from "../../apiv2/types"
 import useAppSelector from "../../hooks/useAppSelector"
 import { common_ratios, containRatio } from "../../util/math"
 import { entryIterator, EntryIteratorCB } from "../../components/graphs/util"
-import * as CustomFieldEntryTypes from "../../apiv2/custom_field_entry_types"
-import * as CustomFieldTypes from "../../apiv2/custom_field_types"
 import { background } from "../../components/graphs/Float"
 import { CircleMarker, TransCircleMarker } from "../../components/graphs/markers"
 import { dateFromUnixTime, getDateZeroHMSM, timeToString, zeroHMSM } from "../../util/time"
@@ -23,13 +21,13 @@ import { durationDays } from "../../util/duration"
 import { defaultGetX } from "../../components/graphs/getters"
 import { DashedLinePath, SolidLinePath } from "../../components/graphs/line_paths"
 import { bisectorFind } from "../../util/search"
-import { useHistory, useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { CustomFieldEntryCell } from "../../components/CustomFieldEntryCell"
 import TagToken from "../../components/tags/TagItem"
 import { Stack, Separator } from "@fluentui/react"
 import { stringFromLocation } from "../../util/url"
 
-const entryIteratorInteger: EntryIteratorCB<CustomFieldEntryTypes.Integer> = (rtn, entry, field, value) => {
+const entryIteratorInteger: EntryIteratorCB<IntegerValue> = (rtn, entry, field, value) => {
     if (rtn.min_y > value.value) {
         rtn.min_y = value.value;
     }
@@ -39,7 +37,7 @@ const entryIteratorInteger: EntryIteratorCB<CustomFieldEntryTypes.Integer> = (rt
     }
 }
 
-const entryIteratorIntegerRange: EntryIteratorCB<CustomFieldEntryTypes.IntegerRange> = (rtn, entry, field, value) => {
+const entryIteratorIntegerRange: EntryIteratorCB<IntegerRangeValue> = (rtn, entry, field, value) => {
     if (rtn.min_y > value.low) {
         rtn.min_y = value.low;
     }
@@ -49,7 +47,7 @@ const entryIteratorIntegerRange: EntryIteratorCB<CustomFieldEntryTypes.IntegerRa
     }
 }
 
-const entryIteratorFloat: EntryIteratorCB<CustomFieldEntryTypes.Float> = (rtn, entry, field, value) => {
+const entryIteratorFloat: EntryIteratorCB<FloatValue> = (rtn, entry, field, value) => {
     if (rtn.min_y > value.value) {
         rtn.min_y = value.value;
     }
@@ -59,7 +57,7 @@ const entryIteratorFloat: EntryIteratorCB<CustomFieldEntryTypes.Float> = (rtn, e
     }
 }
 
-const entryIteratorFloatRange: EntryIteratorCB<CustomFieldEntryTypes.FloatRange> = (rtn, entry, field, value) => {
+const entryIteratorFloatRange: EntryIteratorCB<FloatRangeValue> = (rtn, entry, field, value) => {
     if (rtn.min_y > value.low) {
         rtn.min_y = value.low;
     }
@@ -69,7 +67,7 @@ const entryIteratorFloatRange: EntryIteratorCB<CustomFieldEntryTypes.FloatRange>
     }
 }
 
-const entryIteratorTime: EntryIteratorCB<CustomFieldEntryTypes.Time> = (rtn, entry, field, value) => {
+const entryIteratorTime: EntryIteratorCB<TimeValue> = (rtn, entry, field, value) => {
     let time = new Date(value.value).getTime();
 
     if (rtn.min_y > time) {
@@ -81,11 +79,11 @@ const entryIteratorTime: EntryIteratorCB<CustomFieldEntryTypes.Time> = (rtn, ent
     }
 }
 
-const entryIteratorTimeRange: EntryIteratorCB<CustomFieldEntryTypes.TimeRange> = (rtn, entry, field, value) => {
+const entryIteratorTimeRange: EntryIteratorCB<TimeRangeValue> = (rtn, entry, field, value) => {
     let low = new Date(value.low).getTime();
     let high = new Date(value.high).getTime();
 
-    if ((field.config as CustomFieldTypes.TimeRange).show_diff) {
+    if (((field.config as unknown) as TimeRangeConfig).show_diff) {
         let diff = high - low;
 
         if (rtn.min_y > diff) {
@@ -106,27 +104,27 @@ const entryIteratorTimeRange: EntryIteratorCB<CustomFieldEntryTypes.TimeRange> =
     }
 }
 
-function getEntryIterator(type: CustomFieldTypes.CustomFieldTypeName) {
+function getEntryIterator(type: CustomFieldType) {
     switch (type) {
-        case CustomFieldTypes.CustomFieldTypeName.Integer:
+        case CustomFieldType.Integer:
             return entryIteratorInteger;
-        case CustomFieldTypes.CustomFieldTypeName.IntegerRange:
+        case CustomFieldType.IntegerRange:
             return entryIteratorIntegerRange;
-        case CustomFieldTypes.CustomFieldTypeName.Float:
+        case CustomFieldType.Float:
             return entryIteratorFloat;
-        case CustomFieldTypes.CustomFieldTypeName.FloatRange:
+        case CustomFieldType.FloatRange:
             return entryIteratorFloatRange;
-        case CustomFieldTypes.CustomFieldTypeName.Time:
+        case CustomFieldType.Time:
             return entryIteratorTime;
-        case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+        case CustomFieldType.TimeRange:
             return entryIteratorTimeRange;
     }
 }
 
-function getYScale(type: CustomFieldTypes.CustomFieldTypeName, min: number, max: number) {
+function getYScale(type: CustomFieldType, min: number, max: number) {
     switch (type) {
-        case CustomFieldTypes.CustomFieldTypeName.Time:
-        case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+        case CustomFieldType.Time:
+        case CustomFieldType.TimeRange:
             return scaleTime<number>({
                 domain: [min, max]
             });
@@ -194,7 +192,7 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
     const entries_state = useAppSelector(state => state.entries);
     const tags_state = useAppSelector(state => state.tags);
     const location = useLocation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const loading_state = custom_fields_state.loading || entries_state.loading || tags_state.loading;
 
@@ -214,7 +212,7 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
 
     const y_axis_ticker_cb = useMemo(() => {
         switch (field.config.type) {
-            case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+            case CustomFieldType.TimeRange:
                 return field.config.show_diff ? (value, index) => {
                     return timeToString(typeof value === "number" ? value : value.valueOf(), false, true);
                 } : null
@@ -225,86 +223,86 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
 
     const get_y0_cb = useMemo(() => {
         switch (field.config.type) {
-            case CustomFieldTypes.CustomFieldTypeName.Integer:
+            case CustomFieldType.Integer:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.Integer).value;
+                    return (entry.custom_field_entries[field.id].value as IntegerValue).value;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.IntegerRange:
+            case CustomFieldType.IntegerRange:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.IntegerRange).low;
+                    return (entry.custom_field_entries[field.id].value as IntegerRangeValue).low;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.Float:
+            case CustomFieldType.Float:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.Float).value;
+                    return (entry.custom_field_entries[field.id].value as FloatValue).value;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.FloatRange:
+            case CustomFieldType.FloatRange:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.FloatRange).low;
+                    return (entry.custom_field_entries[field.id].value as FloatRangeValue).low;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.Time:
+            case CustomFieldType.Time:
                 return (entry: ComposedEntry) => {
-                    return new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.Time).value).getTime();
+                    return new Date((entry.custom_field_entries[field.id].value as TimeValue).value).getTime();
                 }
-            case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+            case CustomFieldType.TimeRange:
                 return field.config.show_diff ? (entry: ComposedEntry) => {
-                    return new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).high).getTime() - 
-                           new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).low).getTime();
+                    return new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).high).getTime() - 
+                           new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).low).getTime();
                 } : (entry: ComposedEntry) => {
-                    return new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).low).getTime();
+                    return new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).low).getTime();
                 }
         }
     }, [field.id]);
 
     const get_y1_cb = useMemo(() => {
         switch (field.config.type) {
-            case CustomFieldTypes.CustomFieldTypeName.IntegerRange:
+            case CustomFieldType.IntegerRange:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.IntegerRange).high;
+                    return (entry.custom_field_entries[field.id].value as IntegerRangeValue).high;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.FloatRange:
+            case CustomFieldType.FloatRange:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.FloatRange).high;
+                    return (entry.custom_field_entries[field.id].value as FloatRangeValue).high;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+            case CustomFieldType.TimeRange:
                 return field.config.show_diff ? null : (entry: ComposedEntry) => {
-                    return new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).low).getTime();
+                    return new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).low).getTime();
                 }
         }
     }, [field.id]);
 
     const get_tooltip_y = useMemo(() => {
         switch (field.config.type) {
-            case CustomFieldTypes.CustomFieldTypeName.Integer:
+            case CustomFieldType.Integer:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.Integer).value;
+                    return (entry.custom_field_entries[field.id].value as IntegerValue).value;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.IntegerRange:
+            case CustomFieldType.IntegerRange:
                 return (entry: ComposedEntry) => {
-                    return (((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.IntegerRange).high -
-                             (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.IntegerRange).low) / 2) +
-                             (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.IntegerRange).low;
+                    return (((entry.custom_field_entries[field.id].value as IntegerRangeValue).high -
+                             (entry.custom_field_entries[field.id].value as IntegerRangeValue).low) / 2) +
+                             (entry.custom_field_entries[field.id].value as IntegerRangeValue).low;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.Float:
+            case CustomFieldType.Float:
                 return (entry: ComposedEntry) => {
-                    return (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.Float).value;
+                    return (entry.custom_field_entries[field.id].value as FloatValue).value;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.FloatRange:
+            case CustomFieldType.FloatRange:
                 return (entry: ComposedEntry) => {
-                    return (((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.FloatRange).high -
-                             (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.FloatRange).low) / 2) +
-                             (entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.FloatRange).low;
+                    return (((entry.custom_field_entries[field.id].value as FloatRangeValue).high -
+                             (entry.custom_field_entries[field.id].value as FloatRangeValue).low) / 2) +
+                             (entry.custom_field_entries[field.id].value as FloatRangeValue).low;
                 }
-            case CustomFieldTypes.CustomFieldTypeName.Time:
+            case CustomFieldType.Time:
                 return (entry: ComposedEntry) => {
-                    return new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.Time).value).getTime();
+                    return new Date((entry.custom_field_entries[field.id].value as TimeValue).value).getTime();
                 }
-            case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+            case CustomFieldType.TimeRange:
                 return field.config.show_diff ? (entry: ComposedEntry) => {
-                    return new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).high).getTime() - 
-                           new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).low).getTime();
+                    return new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).high).getTime() - 
+                           new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).low).getTime();
                 } : (entry: ComposedEntry) => {
-                    let low_value = new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).low).getTime();
-                    let high_value = new Date((entry.custom_field_entries[field.id].value as CustomFieldEntryTypes.TimeRange).high).getTime()
+                    let low_value = new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).low).getTime();
+                    let high_value = new Date((entry.custom_field_entries[field.id].value as TimeRangeValue).high).getTime()
                     return ((high_value - low_value) / 2) + low_value;
                 }
         }
@@ -358,8 +356,8 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
             let content = [];
 
             switch (field.config.type) {
-                case CustomFieldTypes.CustomFieldTypeName.IntegerRange:
-                case CustomFieldTypes.CustomFieldTypeName.FloatRange:
+                case CustomFieldType.IntegerRange:
+                case CustomFieldType.FloatRange:
                     content = data_groups.map(set => {
                         return <Fragment key={Math.random()}>
                             <Threshold
@@ -390,8 +388,8 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
                         </Fragment>
                     });
                     break;
-                case CustomFieldTypes.CustomFieldTypeName.Integer:
-                case CustomFieldTypes.CustomFieldTypeName.Float:
+                case CustomFieldType.Integer:
+                case CustomFieldType.Float:
                     content = data_groups.map(set => {
                         return <Fragment key={Math.random()}>
                             <DashedLinePath
@@ -410,7 +408,7 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
                         </Fragment>
                     });
                     break;
-                case CustomFieldTypes.CustomFieldTypeName.Time:
+                case CustomFieldType.Time:
                     content = data_groups.map(set => {
                         return <Fragment key={Math.random()}>
                             <SolidLinePath
@@ -422,7 +420,7 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
                         </Fragment>
                     });
                     break;
-                case CustomFieldTypes.CustomFieldTypeName.TimeRange:
+                case CustomFieldType.TimeRange:
                     if (!field.config.show_diff) {
                         content = data_groups.map(set => {
                             return <Fragment key={Math.random()}>
@@ -542,7 +540,7 @@ export const GraphView = ({field, user_specific, owner}: GraphViewProps) => {
                         }}
                         onClick={() => {
                             if (tooltip_index !== -1) {
-                                history.push(
+                                navigate(
                                     `${location.pathname}/${entries_state.entries[tooltip_index].entry.id}?prev=${stringFromLocation(location)}`
                                 );
                             }

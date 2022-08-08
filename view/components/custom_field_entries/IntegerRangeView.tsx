@@ -1,11 +1,10 @@
 import { SpinButton, Stack, Text } from "@fluentui/react";
 import React from "react"
-import { IntegerRange } from "../../apiv2/custom_field_entry_types";
-import { CustomFieldTypeName, IntegerRange as IntegerRangeField } from "../../apiv2/custom_field_types"
+import { IntegerRangeValue, IntegerRangeConfig, CustomFieldType } from "../../apiv2/types";
 
 interface DetailsTextProps {
-    value: IntegerRange
-    config?: IntegerRangeField
+    value: IntegerRangeValue
+    config?: IntegerRangeConfig
 }
 
 const DetailsText = ({value, config}: DetailsTextProps) => {
@@ -29,10 +28,10 @@ const DetailsText = ({value, config}: DetailsTextProps) => {
 }
 
 interface IntegerRangeEditViewProps {
-    value: IntegerRange
-    config?: IntegerRangeField
+    value: IntegerRangeValue
+    config?: IntegerRangeConfig
 
-    onChange?: (value: IntegerRange) => void
+    onChange?: (value: IntegerRangeValue) => void
 }
 
 export const IntegerRangeEditView = ({value, config = null, onChange}: IntegerRangeEditViewProps) => {
@@ -48,7 +47,7 @@ export const IntegerRangeEditView = ({value, config = null, onChange}: IntegerRa
                     let int = parseInt(v);
 
                     if (!isNaN(int)) {
-                        onChange?.({type: CustomFieldTypeName.IntegerRange, low: int, high: value.high});
+                        onChange?.({type: CustomFieldType.IntegerRange, low: int, high: value.high});
                     }
                 }}
             />
@@ -61,7 +60,7 @@ export const IntegerRangeEditView = ({value, config = null, onChange}: IntegerRa
                     let int = parseInt(v);
 
                     if (!isNaN(int)) {
-                        onChange?.({type: CustomFieldTypeName.IntegerRange, low: value.low, high: int});
+                        onChange?.({type: CustomFieldType.IntegerRange, low: value.low, high: int});
                     }
                 }}
             />
@@ -71,8 +70,8 @@ export const IntegerRangeEditView = ({value, config = null, onChange}: IntegerRa
 }
 
 interface IntegerRangeReadViewProps {
-    value: IntegerRange
-    config?: IntegerRangeField
+    value: IntegerRangeValue
+    config?: IntegerRangeConfig
 }
 
 export const IntegerRangeReadView = ({value, config}: IntegerRangeReadViewProps) => {

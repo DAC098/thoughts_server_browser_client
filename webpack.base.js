@@ -1,5 +1,4 @@
 const path = require("path");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 
 module.exports = {
 	entry: {
@@ -7,24 +6,10 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, "static"),
-		filename: "[name].b.js",
-		clean: true
+		filename: "[name].b.js"
 	},
 	resolve: {
 		extensions: [".ts",".tsx",".js",".jsx"]
-	},
-	module: {
-		rules: [
-			{
-				test: /\.tsx?$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: "ts-loader"
-					}
-				]
-			}
-		]
 	},
 	optimization: {
 		runtimeChunk: "single",
@@ -43,7 +28,5 @@ module.exports = {
 			}
 		}
 	},
-	plugins: [
-		new WebpackManifestPlugin({})
-	]
+	plugins: []
 };

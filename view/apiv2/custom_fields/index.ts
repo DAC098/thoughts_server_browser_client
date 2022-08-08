@@ -1,6 +1,6 @@
 import { json } from "../../request";
 import { urlFromString } from "../../util/url";
-import { CustomFieldType } from "../custom_field_types";
+import { CustomFieldConfig } from "../types";
 
 export * as id from "./field_id";
 
@@ -16,7 +16,7 @@ export async function get({user_id = null}: GetCustomFieldsArgs) {
 
 export interface PostCustomField {
     name: string,
-    config: CustomFieldType
+    config: CustomFieldConfig
     comment?: string
     order: number
 }

@@ -1,6 +1,6 @@
 import { ContextualMenuItemType, DatePicker, DefaultButton, Dialog, DialogFooter, DialogType, IBasePicker, IconButton, IContextualMenuItem, ITag, Stack, Sticky, StickyPositionType, TagItem, TagItemSuggestion, TagPicker } from "@fluentui/react"
 import React, { useEffect, useReducer, useRef } from "react"
-import { useHistory, useLocation, useParams } from "react-router-dom"
+import { useNavigate, useLocation, useParams } from "react-router-dom"
 import useAppDispatch from "../../../hooks/useAppDispatch"
 import useAppSelector from "../../../hooks/useAppSelector"
 import { entryIdViewSlice, EntryIdViewContext, initialState, entry_id_view_actions, EntryIdViewReducer } from "./reducer"
@@ -25,8 +25,8 @@ interface EntryIdProps {}
 
 const EntryId = ({}: EntryIdProps) => {
     const location = useLocation();
-    const history = useHistory();
-    const params = useParams<{entry_id: string, user_id?: string}>();
+    const navigate = useNavigate();
+    const params = useParams<{entry_id: string, user_id: string}>();
     
     const entries_state = useAppSelector(state => state.entries);
     const custom_fields_state = useAppSelector(state => state.custom_fields);
@@ -37,7 +37,13 @@ const EntryId = ({}: EntryIdProps) => {
     const allow_edit = params.user_id == null;
 
     const tag_picker = useRef<IBasePicker<ITag>>(null);
-    let [state, dispatch] = useReducer<EntryIdViewReducer>(entryIdViewSlice.reducer, initialState(allow_edit, params));
+    let [state, dispatch] = useReducer<EntryIdViewReducer>(
+        entryIdViewSlice.reducer, 
+        initialState(allow_edit, {
+            entry_id: params.entry_id,
+            user_id: params.user_id
+        })
+        );
 
     const fetchEntry = () => {
         if (state.loading) {
@@ -121,7 +127,7 @@ const EntryId = ({}: EntryIdProps) => {
                 base_path.pop();
                 base_path.push(res.body.data.entry.id.toString());
 
-                history.push(stringFromLocation({
+                navigate(stringFromLocation({
                     ...location, 
                     pathname: base_path.join("/")
                 }));
@@ -151,12 +157,12 @@ const EntryId = ({}: EntryIdProps) => {
             let url = urlFromLocation(location);
             
             if (url.searchParams.has("prev")) {
-                history.push(url.searchParams.get("prev"));
+                navigate(url.searchParams.get("prev"));
             } else {
                 let new_path = location.pathname.split("/");
                 new_path.pop();
                 
-                history.push(new_path.join("/"));
+                navigate(new_path.join("/"));
             }
         }).catch((e) => {
             console.error(e);
@@ -364,12 +370,12 @@ const EntryId = ({}: EntryIdProps) => {
                         let url = urlFromLocation(location);
 
                         if (url.searchParams.has("prev")) {
-                            history.push(url.searchParams.get("prev"));
+                            navigate(url.searchParams.get("prev"));
                         } else {
                             let new_path = location.pathname.split("/");
                             new_path.pop();
 
-                            history.push(new_path.join("/"));
+                            navigate(new_path.join("/"));
                         }
                     }}
                 />

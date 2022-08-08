@@ -1,7 +1,7 @@
 import { CommandBarButton, IconButton, Nav, Persona, Stack } from "@fluentui/react"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import React, { Reducer, useEffect, useReducer, useState } from "react"
-import { useHistory } from "react-router"
+import { useNavigate } from "react-router-dom"
 import useAppDispatch from "./hooks/useAppDispatch"
 import useAppSelector from "./hooks/useAppSelector"
 import { view_actions } from "./redux/slices/view"
@@ -11,7 +11,7 @@ import resize_listener from "./util/ResizeListener"
 
 const NavSection = () => {
     const nav_width = 200;
-    const history = useHistory();
+    const navigate = useNavigate();
     const app_dispatch = useAppDispatch();
     const active_user_state = useAppSelector(state => state.active_user);
     const view_state = useAppSelector(state => state.view);
@@ -27,7 +27,7 @@ const NavSection = () => {
 
     if (active_user_state.user) {
         username = active_user_state.user.username;
-        full_name = active_user_state.user.full_name;
+        // full_name = active_user_state.user.full_name;
     }
 
     let nav_groups = [
@@ -116,7 +116,7 @@ const NavSection = () => {
             }
             <Persona
                 text={full_name ?? username}
-                secondaryText={full_name != null ? username : null}
+                secondaryText={username}
             />
             <Stack horizontal styles={{root: {height: 44}}}>
                 <CommandBarButton
@@ -127,8 +127,13 @@ const NavSection = () => {
             </Stack>
             <Nav
                 onLinkClick={(e,i) => {
-                    e.preventDefault();
-                    history.push(i.url);
+                    if (e != null) {
+                        e.preventDefault();
+                    }
+
+                    if (i != null) {
+                        navigate(i.url);
+                    }
                 }}
                 groups={nav_groups}
             />

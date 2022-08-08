@@ -1,11 +1,10 @@
 import { SpinButton, Stack, Text } from "@fluentui/react";
 import React from "react"
-import { Integer } from "../../apiv2/custom_field_entry_types";
-import { Integer as IntegerField, CustomFieldTypeName } from "../../apiv2/custom_field_types"
+import { IntegerValue, IntegerConfig, CustomFieldType } from "../../apiv2/types";
 
 interface DetailsTextProps {
-    value: Integer
-    config?: IntegerField
+    value: IntegerValue
+    config?: IntegerConfig
 }
 
 const DetailsText = ({value, config}: DetailsTextProps) => {
@@ -29,10 +28,10 @@ const DetailsText = ({value, config}: DetailsTextProps) => {
 }
 
 interface IntegerEditViewProps {
-    value: Integer
-    config?: IntegerField
+    value: IntegerValue
+    config?: IntegerConfig
 
-    onChange?: (value: Integer) => void
+    onChange?: (value: IntegerValue) => void
 }
 
 export const IntegerEditView = ({value, config = null, onChange}: IntegerEditViewProps) => {
@@ -47,7 +46,7 @@ export const IntegerEditView = ({value, config = null, onChange}: IntegerEditVie
                     let int = parseInt(v);
 
                     if (!isNaN(int)) {
-                        onChange?.({type: CustomFieldTypeName.Integer, value: int})
+                        onChange?.({type: CustomFieldType.Integer, value: int})
                     }
                 }}
             />
@@ -57,8 +56,8 @@ export const IntegerEditView = ({value, config = null, onChange}: IntegerEditVie
 }
 
 interface IntegerReadViewProps {
-    value: Integer
-    config?: IntegerField
+    value: IntegerValue
+    config?: IntegerConfig
 }
 
 export const IntegerReadView = ({value, config}: IntegerReadViewProps) => {

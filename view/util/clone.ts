@@ -1,27 +1,31 @@
-export function cloneString(string: string): string {
-    return string.slice();
+export function cloneString<S extends string>(string: S): S {
+    return string.slice() as S;
 }
 
-export function cloneInteger(integer: number): number {
-    return integer + 0;
+export function cloneInteger<N extends number>(integer: N): N {
+    return integer + 0 as N;
 }
 
-export function cloneFloat(float: number): number {
-    return float + 0.0;
+export function cloneFloat<N extends number>(float: N): N {
+    return float + 0.0 as N;
 }
 
-export function cloneBoolean(boolean: boolean): boolean {
-    return !!boolean;
+export function cloneBoolean<B extends boolean>(boolean: B): B {
+    return !!boolean as B;
 }
 
-export function optionalCloneString(string?: string): string|null {
-    return string?.slice() ?? null;
+export function optionalCloneString<S extends string>(string?: S): S|null {
+    return string?.slice() as S ?? null;
 }
 
-export function optionalCloneInteger(integer?: number): number|null {
+export function optionalCloneInteger<N extends number>(integer?: N): N|null {
     return integer != null ? cloneInteger(integer) : null;
 }
 
-export function optionalCloneBoolean(boolean?: boolean): boolean|null {
+export function optionalCloneFloat<N extends number>(float?: N): N|null {
+    return float != null ? cloneFloat(float) : null;
+}
+
+export function optionalCloneBoolean<B extends boolean>(boolean?: B): B|null {
     return boolean != null ? cloneBoolean(boolean) : null;
 }

@@ -1,6 +1,6 @@
 import { DefaultButton, Stack, TextField } from "@fluentui/react"
 import React, { useState } from "react"
-import { useHistory, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import useAppDispatch from "../../hooks/useAppDispatch"
 import { actions } from "../../redux/slices/active_user"
 import api from "../../apiv2"
@@ -8,6 +8,7 @@ import { urlFromLocation } from "../../util/url";
 
 const Login = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     let [username, setUsername] = useState("");
@@ -18,8 +19,6 @@ const Login = () => {
     let [username_error, setUsernameError] = useState("");
     let [password_error, setPasswordError] = useState("");
 
-    const history = useHistory();
-
     const login = () => {
         if (sending) {
             return;
@@ -29,13 +28,13 @@ const Login = () => {
         setUsernameError("");
         setPasswordError("");
 
-        api.auth.login.post({post: {username,password}}).then((res) => {
+        api.auth.session.post({post: {username,password}}).then((res) => {
             let user = res.body.data;
             let url = urlFromLocation(location);
             
             dispatch(actions.set_user(user));
 
-            history.push(url.searchParams.get("jump_to") ?? "/entries");
+            navigate(url.searchParams.get("jump_to") ?? "/entries");
         }).catch(err => {
             if (err.type === "UsernameNotFound") {
                 setUsernameError(err.message);
@@ -63,7 +62,7 @@ const Login = () => {
                     name="username"
                     value={username}
                     errorMessage={username_error}
-                    onChange={(e,v) => setUsername(v)}
+                    onChange={(e,v) => {if (v != null) setUsername(v)}}
                 />
                 <TextField 
                     label="Password" 
@@ -73,7 +72,7 @@ const Login = () => {
                     canRevealPassword
                     value={password}
                     errorMessage={password_error}
-                    onChange={(e,v) => setPassword(v)}
+                    onChange={(e,v) => {if (v != null) setPassword(v)}}
                 />
                 <DefaultButton 
                     primary 

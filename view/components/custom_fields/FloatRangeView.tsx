@@ -1,11 +1,11 @@
 import { Label, Position, SpinButton, Stack, Toggle } from "@fluentui/react";
 import React from "react"
-import { FloatRange, CustomFieldTypeName } from "../../apiv2/custom_field_types";
+import { FloatRangeConfig, CustomFieldType } from "../../apiv2/types";
 
 interface FloatRangeEditViewProps {
-    config: FloatRange
+    config: FloatRangeConfig
 
-    onChange?: (config: FloatRange) => void
+    onChange?: (config: FloatRangeConfig) => void
 }
 
 export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) => {
@@ -16,7 +16,7 @@ export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) 
                 <Stack horizontal verticalAlign="center" tokens={{childrenGap: 8}}>
                     <Toggle checked={config.minimum != null} onChange={(e,c) => {
                         onChange?.({
-                            type: CustomFieldTypeName.FloatRange, 
+                            type: CustomFieldType.FloatRange, 
                             minimum: c ? 0 : null, maximum: config.maximum,
                             step: config.step, precision: config.precision
                         })
@@ -29,7 +29,7 @@ export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) 
 
                             if (!isNaN(float) && (config.maximum != null ? float < config.maximum : true)) {
                                 onChange?.({
-                                    type: CustomFieldTypeName.FloatRange, 
+                                    type: CustomFieldType.FloatRange, 
                                     minimum: float, maximum: config.maximum,
                                     step: config.step, precision: config.precision
                                 });
@@ -43,7 +43,7 @@ export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) 
                 <Stack horizontal verticalAlign="center" tokens={{childrenGap: 8}}>
                     <Toggle checked={config.maximum != null} onChange={(e,c) => {
                         onChange?.({
-                            type: CustomFieldTypeName.FloatRange, 
+                            type: CustomFieldType.FloatRange, 
                             minimum: config.minimum, maximum: c ? 0 : null,
                             step: config.step, precision: config.precision
                         });
@@ -56,7 +56,7 @@ export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) 
 
                             if (!isNaN(float) && (config.minimum != null ? float > config.minimum : true)) {
                                 onChange?.({
-                                    type: CustomFieldTypeName.FloatRange, 
+                                    type: CustomFieldType.FloatRange, 
                                     minimum: config.minimum, maximum: float,
                                     step: config.step, precision: config.precision
                                 });
@@ -76,7 +76,7 @@ export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) 
 
                     if (!isNaN(float)) {
                         onChange?.({
-                            type: CustomFieldTypeName.FloatRange,
+                            type: CustomFieldType.FloatRange,
                             minimum: config.minimum, maximum: config.maximum,
                             step: float, precision: config.precision
                         });
@@ -92,7 +92,7 @@ export const FloatRangeEditView = ({config, onChange}: FloatRangeEditViewProps) 
 
                     if (!isNaN(int)) {
                         onChange?.({
-                            type: CustomFieldTypeName.FloatRange,
+                            type: CustomFieldType.FloatRange,
                             minimum: config.minimum, maximum: config.maximum,
                             step: config.step, precision: int
                         });

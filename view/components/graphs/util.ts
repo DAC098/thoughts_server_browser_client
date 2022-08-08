@@ -1,5 +1,4 @@
-import { CustomFieldEntryType } from "../../apiv2/custom_field_entry_types";
-import { CustomField, ComposedEntry, EntryMarker } from "../../apiv2/types";
+import { CustomField, ComposedEntry, EntryMarker, CustomFieldValue } from "../../apiv2/types";
 import { dateFromUnixTimeZeroHMSM, getDateZeroHMSM } from "../../util/time";
 
 interface EntryMarkerInfo {
@@ -16,14 +15,14 @@ export interface EntryIteratorResult {
     markers: EntryMarkerInfo[]
 }
 
-export type EntryIteratorCB<T extends CustomFieldEntryType> = (
+export type EntryIteratorCB<T extends CustomFieldValue> = (
     rtn: EntryIteratorResult,
     entry: ComposedEntry,
     field: CustomField,
     value: T
 ) => void;
 
-export function entryIterator<T extends CustomFieldEntryType>(
+export function entryIterator<T extends CustomFieldValue>(
     entries: ComposedEntry[],
     field: CustomField,
     cb: EntryIteratorCB<T>

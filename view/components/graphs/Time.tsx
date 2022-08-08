@@ -5,8 +5,7 @@ import { LinePath } from '@visx/shape'
 import { AxisLeft, AxisBottom } from '@visx/axis'
 import { GridRows, GridColumns } from '@visx/grid'
 import { scaleTime, scaleLinear } from '@visx/scale'
-import { Time } from "../../apiv2/custom_field_entry_types";
-import { CustomField, ComposedEntry } from "../../apiv2/types";
+import { CustomField, ComposedEntry, TimeValue } from "../../apiv2/types";
 import { SolidLinePath } from "./line_paths"
 import { CircleMarker } from "./markers"
 import { defaultGetX } from "./getters"
@@ -16,7 +15,7 @@ import { entryIterator } from "./util"
 export const background = '#f3f3f3';
 
 const getY = (entry: ComposedEntry, field_id: string) => {
-    return new Date((entry.custom_field_entries[field_id].value as Time).value).getTime();
+    return new Date((entry.custom_field_entries[field_id].value as TimeValue).value).getTime();
 }
 
 const defaultMargin = { top: 40, right: 30, bottom: 50, left: 40 };
@@ -45,7 +44,7 @@ export default function TimeGraph({
         min_x, min_y,
         max_x, max_y,
         data_groups
-    } = entryIterator<Time>(entries, field, (rtn, entry, field, value) => {
+    } = entryIterator<TimeValue>(entries, field, (rtn, entry, field, value) => {
         let time = new Date(value.value).getTime();
 
         if (rtn.min_y > time) {

@@ -6,7 +6,7 @@ import * as users from "./users"
 import * as admin from "./admin"
 import * as global from "./global"
 
-const apiv2 = {
+const api = {
     entries,
     custom_fields,
     tags,
@@ -16,4 +16,4 @@ const apiv2 = {
     global
 }
 
-export default apiv2;
+export default api;

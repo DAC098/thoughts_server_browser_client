@@ -1,7 +1,6 @@
 import { CommandBar, ScrollablePane, ShimmeredDetailsList, Stack, Sticky, StickyPositionType } from "@fluentui/react"
 import React, { useEffect } from "react"
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Tag } from "../../apiv2/types";
 import ColorSwatch from "../../components/ColorSwatch";
 import useAppDispatch from "../../hooks/useAppDispatch"
@@ -14,7 +13,7 @@ import { getBrightness, min_brightness } from "../../util/colors";
 interface TagsViewProps {}
 
 const TagsView = ({}: TagsViewProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const user_id = useUserId();
     const tags_state = useAppSelector(state => state.tags);
     const globalFetchTags = useGlobalFetchTags();
@@ -37,7 +36,7 @@ const TagsView = ({}: TagsViewProps) => {
             text: "New Tag",
             iconProps: {iconName: "Add"},
             onClick: () => {
-                history.push("/tags/0");
+                navigate("/tags/0");
             }
         }
     ];

@@ -1,7 +1,8 @@
 import { DefaultButton, Dialog, DialogFooter, DialogType, Dropdown, IconButton, Persona, PersonaSize, ScrollablePane, SearchBox, Separator, Stack, TextField } from "@fluentui/react"
 import React, { Reducer, useEffect, useReducer } from "react"
-import { useHistory, useLocation, useParams } from "react-router"
-import { cloneComposedFullUser, ComposedFullUser, newComposedFullUser, User, UserLevel } from "../../../apiv2/types"
+import { useNavigate, useLocation, useParams } from "react-router-dom"
+import { ComposedFullUser, User, UserLevel } from "../../../apiv2/types"
+import { cloneComposedFullUser, createComposedFullUser } from "../../../apiv2/types/methods"
 import IndentSection from "../../../components/IndentSection"
 import api from "../../../apiv2"
 import { json } from "../../../request"
@@ -28,8 +29,8 @@ interface AdminUserIdViewState {
 
 function makeInitialState(): AdminUserIdViewState { 
     return {
-        original: newComposedFullUser(),
-        current: newComposedFullUser(),
+        original: createComposedFullUser(),
+        current: createComposedFullUser(),
     
         loading: false,
         sending: false,
@@ -78,7 +79,7 @@ const adminUserIdViewSlice = createSlice({
             state.known_users = {};
 
             for (let rec of state.current.access) {
-                state.known_users[rec.user.id] = true;
+                state.known_users[rec.allowed_for] = true;
             }
         },
         update_user: (state, action: PayloadAction<any>) => {
@@ -90,7 +91,7 @@ const adminUserIdViewSlice = createSlice({
             state.known_users = {};
 
             for (let rec of state.current.access) {
-                state.known_users[rec.user.id] = true;
+                state.known_users[rec.allowed_for] = true;
             }
         },
 
@@ -109,14 +110,11 @@ const adminUserIdViewSlice = createSlice({
                 allowed_for: is_manager ? action.payload.id : state.current.user.id
             }
 
-            state.current.access.push({
-                user: action.payload,
-                access
-            });
+            state.current.access.push(access);
             state.known_users[action.payload.id] = true;
         },
         drop_user_access: (state, action: PayloadAction<number>) => {
-            delete state.known_users[state.current.access[action.payload].user.id];
+            delete state.known_users[state.current.access[action.payload].allowed_for];
             state.current.access.splice(action.payload, 1);
         }
     }
@@ -131,7 +129,7 @@ type AdminUserIdViewReducer = Reducer<AdminUserIdViewState, AdminUserIdViewActio
 
 const UserInformation = () => {
     const params = useParams<{user_id: string}>();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     let [state, dispatch] = useReducer<AdminUserIdViewReducer>(
         adminUserIdViewSlice.reducer, makeInitialState()
@@ -150,29 +148,29 @@ const UserInformation = () => {
             let post: any = {...state.current};
             post.user["password"] = state.password;
 
-            promise = api.admin.users.post({post}).then(res => {
+            api.admin.users.post({post}).then(res => {
                 let record = res.body.data;
                 dispatch(reducer_actions.set_user(record));
-                history.push(`/admin/users/${record.user.id}`);
+                navigate(`/admin/users/${record.user.id}`);
+            }).catch(console.error).then(() => {
+                dispatch(reducer_actions.set_sending(false));
             });
         } else {
-            promise = api.admin.users.id.put({
+            api.admin.users.id.put({
                 id: params.user_id, 
                 post: {
                     user: {...state.current.user},
                     data: {...state.current.data},
                     access: state.current.access.map(rec => {
-                        return rec.user.id
+                        return rec.allowed_for
                     })
                 }
             }).then(res => {
                 dispatch(reducer_actions.set_user(res.body.data));
+            }).catch(console.error).then(() => {
+                dispatch(reducer_actions.set_sending(false));
             });
         }
-
-        promise.catch(console.error).then(() => {
-            dispatch(reducer_actions.set_sending(false));
-        });
     }
 
     const sendDelete = () => {
@@ -187,7 +185,7 @@ const UserInformation = () => {
         dispatch(reducer_actions.set_deleting(true));
 
         json.delete(`/admin/users/${params.user_id}`).then(() => {
-            history.push("/admin/users");
+            navigate("/admin/users");
         }).catch((e) => {
             console.error(e);
             dispatch(reducer_actions.set_deleting(false));
@@ -340,11 +338,11 @@ const UserInformation = () => {
                     <Stack tokens={{childrenGap: 8}}>
                         <Separator children={"Assigned"}/>
                         {state.current.access.map((v, index) =>
-                            <Stack key={v.user.id} horizontal verticalAlign="center">
+                            <Stack key={v.allowed_for} horizontal verticalAlign="center">
                                 <Stack.Item grow>
                                     <Persona
-                                        text={v.user.full_name ?? v.user.username}
-                                        secondaryText={v.user.full_name != null ? v.user.username : null}
+                                        text={""}
+                                        secondaryText={""}
                                     />
                                 </Stack.Item>
                                 <IconButton 
@@ -385,7 +383,7 @@ const UserInformation = () => {
 }
 
 const AdminUserIdView = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     return <Stack 
@@ -412,7 +410,7 @@ const AdminUserIdView = () => {
                     let new_path = location.pathname.split("/");
                     new_path.pop();
 
-                    history.push(new_path.join("/"));
+                    navigate(new_path.join("/"));
                 }}
             />
             <ScrollablePane>
