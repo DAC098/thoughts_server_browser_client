@@ -4,6 +4,7 @@ import { entries } from "./slices/entries"
 import { custom_fields } from "./slices/custom_fields"
 import { tags } from "./slices/tags"
 import { view_slice } from "./slices/view"
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 
 export const store = configureStore({
     reducer: {
@@ -17,3 +18,6 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type StateDispatch = typeof store.dispatch;
+
+export const useAppDispatch = () => useDispatch<StateDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
