@@ -1,7 +1,54 @@
-import RequestError from "./error/RequestError";
+import { cloneInteger, cloneString } from "./util/clone"
 
-export type Method = "GET" | "POST" | "PUT" | "DELETE";
+export type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 export type Path = URL | string;
+
+export interface ResponseJSON<T = any> {
+    type?: string,
+    message: string
+    date: string,
+    data?: T
+}
+
+export type JSONResponse<T> = T extends ResponseJSON ? T : ResponseJSON<T>;
+
+export class RequestError extends Error {
+    private status_: number;
+    private request_: Response;
+    private type_: string;
+
+    constructor(type: string, message: string, status?: number, request?: Response) {
+        super(message);
+        this.type_ = type;
+        this.status_ = status ?? 500;
+        this.request_ = request;
+
+        try {
+            Error.captureStackTrace(this);
+        } catch(e) {}
+    }
+
+    get status() {
+        return this.status_;
+    }
+
+    get request() {
+        return this.request_;
+    }
+
+    get type() {
+        return this.type_;
+    }
+
+    public toJson() {
+        return {
+            error: "RequestError",
+            status: cloneInteger(this.status_),
+            type: cloneString(this.type_),
+            message: cloneString(this.message)
+        }
+    }
+}
 
 export function getNewRequest(method: Method, url: Path, headers: HeadersInit, body?: BodyInit) {
     if (typeof url === "string") {
@@ -14,15 +61,6 @@ export function getNewRequest(method: Method, url: Path, headers: HeadersInit, b
         body
     });
 }
-
-export interface ResponseJSON<T = any> {
-    type?: string,
-    message: string
-    date: string,
-    data?: T
-}
-
-export type JSONResponse<T> = T extends ResponseJSON ? T : ResponseJSON<T>;
 
 async function handleResponse<T = any>(response: Response) : Promise<{body: JSONResponse<T>, response: Response, status: number}> {
     const content_type = response.headers.get("content-type");
@@ -75,12 +113,13 @@ export const json = {
             "Accept": "application/json"
         });
         const response = await fetch(request);
-        
+
         return await handleResponse<T>(response);
     },
     post: <T = any> (url: Path, body: any) => sendJSON<T>("POST", url, body),
     put: <T = any> (url: Path, body: any) => sendJSON<T>("PUT", url, body),
-    delete: <T = any> (url: Path, body?: any) => sendJSON<T>("DELETE", url, body)
+    delete: <T = any> (url: Path, body?: any) => sendJSON<T>("DELETE", url, body),
+    patch: <T = any> (url: Path, body: any) => sendJSON<T>("PATCH", url, body)
 }
 
 window["request"] = {

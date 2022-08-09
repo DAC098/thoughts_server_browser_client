@@ -3,7 +3,7 @@ import apiv2 from "../../apiv2";
 import { CustomField } from "../../apiv2/types"
 import { compareNumbers, compareStrings } from "../../util/compare";
 import { GetCustomFieldsArgs } from "../../apiv2/custom_fields";
-import RequestError from "../../error/RequestError";
+import { RequestError } from "../../request";
 
 const fetchCustomFields = createAsyncThunk<CustomField[], GetCustomFieldsArgs>(
     "custom_fields/fetch_custom_fields",

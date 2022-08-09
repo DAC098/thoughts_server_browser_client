@@ -3,7 +3,7 @@ import { Tag } from "../../apiv2/types";
 import { GetTagsArgs } from "../../apiv2/tags";
 import { compareStrings } from "../../util/compare";
 import apiv2 from "../../apiv2";
-import RequestError from "../../error/RequestError";
+import { RequestError } from "../../request";
 
 const fetchTags = createAsyncThunk<Tag[], GetTagsArgs>(
     "tags/fetch_tags",
