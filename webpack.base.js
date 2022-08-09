@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
 	entry: {
-		main: "./view/entry.tsx"
+		main: "./src/entry.tsx"
 	},
 	output: {
 		path: path.resolve(__dirname, "static"),
