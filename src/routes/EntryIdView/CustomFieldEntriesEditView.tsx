@@ -1,7 +1,7 @@
 import { Stack, Separator, Label, IconButton, TextField } from "@fluentui/react";
 import React, { useContext } from "react";
-import { CustomField, CustomFieldEntry, CustomFieldValue } from "../../../apiv2/types";
-import { CustomFieldEntryTypeEditView } from "../../../components/custom_field_entries";
+import { CustomField, CustomFieldEntry, CustomFieldValue } from "../../api/types";
+import { CustomFieldEntryTypeEditView } from "../../components/custom_field_entries";
 import { EntryIdViewContext, entry_id_view_actions } from "./reducer";
 
 interface CustomFieldEntryInputProps {

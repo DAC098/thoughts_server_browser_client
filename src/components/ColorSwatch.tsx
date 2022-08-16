@@ -1,5 +1,4 @@
-import React from "react"
-import { getBrightness, min_brightness } from "../util/colors"
+import { getBrightness, getBrightnessAlt, min_brightness } from "../util/colors"
 
 interface ColorSwatchProps {
     color: string
@@ -21,7 +20,7 @@ const ColorSwatch = ({
     width: size, height: size,
     borderRadius: size / 2,
     backgroundColor: color,
-    border: `${borderWidth}px solid ${getBrightness(color) < min_brightness ? lightColor : darkColor}`,
+    border: `${borderWidth}px solid ${getBrightnessAlt(color) < min_brightness ? lightColor : darkColor}`,
     display: display,
     boxSizing: "border-box"
 }}/>

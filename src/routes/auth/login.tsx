@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom";
 import useAppDispatch from "../../hooks/useAppDispatch"
 import { actions } from "../../redux/slices/active_user"
-import api from "../../apiv2"
+import api from "../../api"
 import { urlFromLocation } from "../../util/url";
 
 const Login = () => {

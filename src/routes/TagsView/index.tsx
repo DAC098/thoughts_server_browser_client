@@ -1,8 +1,9 @@
 import { CommandBar, ScrollablePane, ShimmeredDetailsList, Stack, Sticky, StickyPositionType } from "@fluentui/react"
 import React, { useEffect } from "react"
-import { useNavigate, Link } from "react-router-dom";
-import { Tag } from "../../apiv2/types";
+import { useNavigate, Link, useOutlet } from "react-router-dom";
+import { Tag } from "../../api/types";
 import ColorSwatch from "../../components/ColorSwatch";
+import OverlayedPage from "../../components/OverlayedPage";
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
 import { useGlobalFetchTags } from "../../hooks/useGlobalFetchTags";
@@ -14,6 +15,8 @@ interface TagsViewProps {}
 
 const TagsView = ({}: TagsViewProps) => {
     const navigate = useNavigate();
+    const outlet = useOutlet();
+
     const user_id = useUserId();
     const tags_state = useAppSelector(state => state.tags);
     const globalFetchTags = useGlobalFetchTags();
@@ -41,7 +44,8 @@ const TagsView = ({}: TagsViewProps) => {
         }
     ];
     
-    return <Stack styles={{root: {
+    return <>
+    <Stack styles={{root: {
         position: "relative",
         width: "100%",
         height: "100%"
@@ -89,6 +93,14 @@ const TagsView = ({}: TagsViewProps) => {
             />
         </ScrollablePane>
     </Stack>
+    {outlet != null ?
+        <OverlayedPage>
+            {outlet}
+        </OverlayedPage>
+        :
+        null
+    }
+    </>
 }
 
 export default TagsView;

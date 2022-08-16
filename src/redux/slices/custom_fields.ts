@@ -1,9 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import apiv2 from "../../apiv2";
-import { CustomField } from "../../apiv2/types"
+import apiv2 from "../../api";
+import { CustomField } from "../../api/types"
 import { compareNumbers, compareStrings } from "../../util/compare";
-import { GetCustomFieldsArgs } from "../../apiv2/custom_fields";
+import { GetCustomFieldsArgs } from "../../api/custom_fields";
 import { RequestError } from "../../request";
+
+function sortCustomFields(a: CustomField, b: CustomField) {
+    let order_sort = compareNumbers(a.order, b.order);
+
+    if (order_sort === 0) {
+        return compareStrings(a.name, b.name);
+    } else {
+        return order_sort;
+    }
+}
 
 const fetchCustomFields = createAsyncThunk<CustomField[], GetCustomFieldsArgs>(
     "custom_fields/fetch_custom_fields",
@@ -48,15 +58,7 @@ export const custom_fields = createSlice({
             state.custom_fields.push(action.payload);
             state.mapping[action.payload.id] = action.payload;
 
-            state.custom_fields.sort((a, b) => {
-                let order_sort = compareNumbers(a.order, b.order);
-
-                if (order_sort === 0) {
-                    return compareStrings(a.name, b.name);
-                } else {
-                    return -order_sort;
-                }
-            })
+            state.custom_fields.sort(sortCustomFields)
         },
         update_field: (state, action: PayloadAction<CustomField>) => {
             for (let i = 0; i < state.custom_fields.length; ++i) {
@@ -67,15 +69,7 @@ export const custom_fields = createSlice({
                 }
             }
 
-            state.custom_fields.sort((a, b) => {
-                let order_sort = compareNumbers(a.order, b.order);
-
-                if (order_sort === 0) {
-                    return compareStrings(a.name, b.name);
-                } else {
-                    return -order_sort;
-                }
-            })
+            state.custom_fields.sort(sortCustomFields)
         },
         delete_field: (state, action: PayloadAction<number>) => {
             let i = 0;

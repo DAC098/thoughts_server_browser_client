@@ -4,7 +4,7 @@ import { AxisLeft, AxisBottom } from '@visx/axis'
 import { GridRows, GridColumns } from '@visx/grid'
 import { scaleTime, scaleLinear } from '@visx/scale'
 import * as CurveType from "@visx/curve"
-import { CustomField, ComposedEntry, IntegerValue } from "../../apiv2/types";
+import { CustomField, ComposedEntry, IntegerValue } from "../../api/types";
 import { CircleMarker, TransCircleMarker } from "./markers"
 import { DashedLinePath, SolidLinePath } from "./line_paths"
 import { defaultGetX } from "./getters"

@@ -2,9 +2,9 @@ import { ColorPicker, DefaultButton, Dialog, DialogFooter, DialogType, IconButto
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import React, { Reducer, useEffect, useReducer } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import api from "../../apiv2"
-import { Tag } from "../../apiv2/types"
-import { cloneTag, createTag } from "../../apiv2/types/methods"
+import api from "../../api"
+import { Tag } from "../../api/types"
+import { cloneTag, createTag } from "../../api/types/methods"
 import OverlayedPage from "../../components/OverlayedPage"
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
@@ -154,10 +154,10 @@ const reducer_actions = {
 type TagsIDViewActions = SliceActionTypes<typeof reducer_actions>;
 type TagsIDViewReducer = Reducer<TagsIDViewState, TagsIDViewActions>;
 
-interface TagsIDViewProps {
+interface TagsIdViewProps {
 }
 
-const TagsIDView = ({}: TagsIDViewProps) => {
+const TagsIdView = ({}: TagsIdViewProps) => {
     const params = useParams<{tag_id: string}>();
     const navigate = useNavigate();
     const tags_state = useAppSelector(state => state.tags);
@@ -382,4 +382,4 @@ const TagsIDView = ({}: TagsIDViewProps) => {
     </>
 }
 
-export default TagsIDView;
+export default TagsIdView;

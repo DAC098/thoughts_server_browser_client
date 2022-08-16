@@ -1,13 +1,13 @@
-import { CommandBar, DetailsList, ScrollablePane, ShimmeredDetailsList, Stack, Sticky, StickyPositionType } from "@fluentui/react";
-import React, { useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { CommandBar, IGroup, ScrollablePane, ShimmeredDetailsList, Stack, Sticky, StickyPositionType } from "@fluentui/react";
+import { useNavigate, useParams, Link, useOutlet } from "react-router-dom";
 import useAppDispatch from "../../hooks/useAppDispatch"
 import useAppSelector from "../../hooks/useAppSelector"
-import { CustomField } from "../../apiv2/types";
+import { CustomField } from "../../api/types";
 import { custom_field_actions } from "../../redux/slices/custom_fields"
-import { Link } from "react-router-dom";
 import { useUserId } from "../../hooks/useUserId";
 import { useGlobalFetchCustomFields } from "../../hooks/useGlobalFetchCustomFields";
+import OverlayedPage from "../../components/OverlayedPage";
 
 interface CustomFieldsViewProps {
     user_specific?: boolean
@@ -16,6 +16,7 @@ interface CustomFieldsViewProps {
 const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
     const params = useParams<{user_id?: string}>();
     const navigate = useNavigate();
+    const outlet = useOutlet();
 
     const custom_fields_state = useAppSelector(state => state.custom_fields);
 
@@ -27,9 +28,12 @@ const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
         if (custom_fields_state.owner !== user_id) {
             globalFetchCustomFields({});
         }
-    }, [user_id])
+    }, [user_id]);
 
-    return <Stack
+    let groups: IGroup[] = null;
+
+    return <>
+    <Stack
         style={{
             width: "100%", height: "100%",
             position: "relative"
@@ -39,21 +43,31 @@ const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
             <Sticky stickyPosition={StickyPositionType.Header} stickyBackgroundColor={"white"}>
                 <CommandBar items={[
                     {
+                        key: "new_field",
+                        text: "New Field",
+                        split: true,
+                        iconProps: {iconName: "Add"},
+                        onClick: () => navigate("/custom_fields/0"),
+                        subMenuProps: {
+                            items: [
+                                {
+                                    key: "new_global_field",
+                                    text: "New Global Field"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         key: "refresh",
                         text: "Refresh",
                         iconProps: {iconName: "Refresh"},
                         onClick: () => globalFetchCustomFields({})
                     },
-                    {
-                        key: "new_field",
-                        text: "New Field",
-                        iconProps: {iconName: "Add"},
-                        onClick: () => navigate("/custom_fields/0")
-                    }
                 ]}/>
             </Sticky>
             <ShimmeredDetailsList
                 items={custom_fields_state.custom_fields}
+                groups={groups}
                 enableShimmer={custom_fields_state.loading}
                 onRenderDetailsHeader={(p, d) => {
                     return <Sticky stickyPosition={StickyPositionType.Header}>
@@ -102,6 +116,14 @@ const CustomFieldsView = ({user_specific = false}: CustomFieldsViewProps) => {
             />
         </ScrollablePane>
     </Stack>
+    {outlet != null ?
+        <OverlayedPage>
+            {outlet}
+        </OverlayedPage>
+        :
+        null
+    }
+    </>
 }
 
 export default CustomFieldsView;

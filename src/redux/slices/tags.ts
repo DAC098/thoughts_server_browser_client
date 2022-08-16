@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Tag } from "../../apiv2/types";
-import { GetTagsArgs } from "../../apiv2/tags";
+import { Tag } from "../../api/types";
+import { GetTagsArgs } from "../../api/tags";
 import { compareStrings } from "../../util/compare";
-import apiv2 from "../../apiv2";
+import apiv2 from "../../api";
 import { RequestError } from "../../request";
 
 const fetchTags = createAsyncThunk<Tag[], GetTagsArgs>(

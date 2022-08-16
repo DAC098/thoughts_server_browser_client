@@ -1,8 +1,8 @@
 import { DefaultButton, Dialog, DialogFooter, DialogType, Dropdown, IconButton, IDropdownOption, Position, SpinButton, Stack, TextField } from "@fluentui/react"
 import React, { createContext, Dispatch, Reducer, useContext, useEffect, useReducer } from "react"
 import { useNavigate, useLocation, useParams } from "react-router-dom"
-import { CustomField, CustomFieldConfig, CustomFieldType } from "../../apiv2/types"
-import { cloneCustomField, createCustomField, createCustomFieldConfig } from "../../apiv2/types/methods"
+import { CustomField, CustomFieldConfig, CustomFieldType } from "../../api/types"
+import { cloneCustomField, createCustomField, createCustomFieldConfig } from "../../api/types/methods"
 import { useUserId } from "../../hooks/useUserId"
 import { CustomFieldTypeEditView } from "../../components/custom_fields"
 import useAppDispatch from "../../hooks/useAppDispatch"
@@ -10,7 +10,7 @@ import useAppSelector from "../../hooks/useAppSelector"
 import { custom_field_actions } from "../../redux/slices/custom_fields"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { SliceActionTypes } from "../../redux/types"
-import apiv2 from "../../apiv2"
+import apiv2 from "../../api"
 
 interface FieldState {
     original?: CustomField
@@ -102,9 +102,9 @@ const reducer_actions = {
 type FieldStateActionsTypes = SliceActionTypes<typeof reducer_actions>;
 type FieldStateReducer = Reducer<FieldState, FieldStateActionsTypes>;
 
-interface FieldIdViewProps {}
+interface CustomFieldIdViewProps {}
 
-const FieldIdView = ({}: FieldIdViewProps) => {
+const CustomFieldIdView = ({}: CustomFieldIdViewProps) => {
     const location = useLocation();
     const navigate = useNavigate();
     const params = useParams<{field_id: string, user_id?: string}>();
@@ -366,4 +366,4 @@ const FieldIdView = ({}: FieldIdViewProps) => {
     </>
 }
 
-export default FieldIdView;
+export default CustomFieldIdView;

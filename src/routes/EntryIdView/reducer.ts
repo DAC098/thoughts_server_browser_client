@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createContext, Dispatch, Reducer } from "react"
-import apiv2 from "../../../apiv2";
-import { CustomFieldValue, ComposedEntry, CustomFieldEntry, TextEntry, EntryMarker, AudioEntry } from "../../../apiv2/types"
-import { cloneComposedEntry, createComposedEntry, createCustomFieldEntry, createTextEntry, createEntryMarker, createAudioEntry } from "../../../apiv2/types/methods"
-import { store } from "../../../redux/store";
-import { SliceActionTypes } from "../../../redux/types";
-import { cloneInteger } from "../../../util/clone";
-import { unixNow, unixTimeFromDate } from "../../../util/time";
+import apiv2 from "../../api";
+import { CustomFieldValue, ComposedEntry, CustomFieldEntry, TextEntry, EntryMarker, AudioEntry } from "../../api/types"
+import { cloneComposedEntry, createComposedEntry, createCustomFieldEntry, createTextEntry, createEntryMarker, createAudioEntry } from "../../api/types/methods"
+import { store } from "../../redux/store";
+import { SliceActionTypes } from "../../redux/types";
+import { cloneInteger } from "../../util/clone";
+import { unixNow, unixTimeFromDate } from "../../util/time";
 
 interface UIKey {
     key?: number | string

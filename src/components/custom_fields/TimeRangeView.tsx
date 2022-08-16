@@ -1,6 +1,6 @@
 import { Stack, Toggle } from "@fluentui/react";
 import React from "react"
-import { CustomFieldType, TimeRangeConfig } from "../../apiv2/types";
+import { CustomFieldType, TimeRangeConfig } from "../../api/types";
 
 interface TimeRangeEditViewProps {
     config: TimeRangeConfig

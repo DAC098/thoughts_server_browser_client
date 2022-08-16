@@ -1,6 +1,6 @@
 import { Stack, Text } from "@fluentui/react";
 import React from "react";
-import { TextEntry } from "../../../apiv2/types";
+import { TextEntry } from "../../api/types";
 
 interface TextEntryReadViewProps {
     text_entries: TextEntry[]

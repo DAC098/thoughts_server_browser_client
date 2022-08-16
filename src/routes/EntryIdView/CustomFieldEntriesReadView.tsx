@@ -1,7 +1,6 @@
 import { Stack, Separator, Label, Text } from "@fluentui/react"
-import React from "react"
-import { CustomFieldEntry, CustomField } from "../../../apiv2/types"
-import { CustomFieldEntryTypeReadView } from "../../../components/custom_field_entries"
+import { CustomFieldEntry, CustomField } from "../../api/types"
+import { CustomFieldEntryTypeReadView } from "../../components/custom_field_entries"
 
 interface CustomFieldEntriesReadViewProps {
     custom_field_entries: {[id: string]: CustomFieldEntry}

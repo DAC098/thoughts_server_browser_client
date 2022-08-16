@@ -1,8 +1,8 @@
 import { DefaultButton, IconButton, Persona, PersonaSize, Stack } from "@fluentui/react"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useLocation, useParams, Link } from "react-router-dom"
-import api from "../../apiv2"
-import { User } from "../../apiv2/types"
+import api from "../../api"
+import { User } from "../../api/types"
 
 interface UserInformationViewProps {
     user: User

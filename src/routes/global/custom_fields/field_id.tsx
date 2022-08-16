@@ -3,9 +3,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
 import { Reducer, useEffect, useReducer } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import apiv2 from "../../../apiv2";
-import { CustomField, CustomFieldType, GlobalCustomField, CustomFieldConfig } from "../../../apiv2/types";
-import { cloneCustomField, createCustomField, createCustomFieldConfig, createGlobalCustomField, cloneGlobalCustomField } from "../../../apiv2/types/methods"
+import apiv2 from "../../../api";
+import { CustomField, CustomFieldType, GlobalCustomField, CustomFieldConfig } from "../../../api/types";
+import { cloneCustomField, createCustomField, createCustomFieldConfig, createGlobalCustomField, cloneGlobalCustomField } from "../../../api/types/methods"
 import { CustomFieldTypeEditView } from "../../../components/custom_fields";
 import OverlayedPage from "../../../components/OverlayedPage";
 import { SliceActionTypes } from "../../../redux/types";

@@ -3,8 +3,8 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router"
 import { Link } from "react-router-dom";
-import apiv2 from "../../../apiv2";
-import { GlobalCustomField } from "../../../apiv2/types";
+import apiv2 from "../../../api";
+import { GlobalCustomField } from "../../../api/types";
 import { stringFromLocation } from "../../../util/url";
 
 export interface GlobalCustomFieldsViewProps {}

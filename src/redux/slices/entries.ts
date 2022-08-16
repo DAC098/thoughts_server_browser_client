@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ComposedEntry } from "../../apiv2/types"
-import { GetEntriesArgs } from "../../apiv2/entries";
-import apiv2 from "../../apiv2";
+import { ComposedEntry } from "../../api/types"
+import { GetEntriesArgs } from "../../api/entries";
+import apiv2 from "../../api";
 import { compareNumbers } from "../../util/compare";
 import { rand } from "../../util/rand";
 import { RequestError } from "../../request";

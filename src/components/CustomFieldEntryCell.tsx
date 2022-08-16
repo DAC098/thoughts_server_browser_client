@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { CustomFieldValue, CustomFieldConfig, FloatConfig, FloatRangeConfig, TimeConfig, TimeRangeConfig } from "../apiv2/types";
+import { CustomFieldValue, CustomFieldConfig, FloatConfig, FloatRangeConfig, TimeConfig, TimeRangeConfig } from "../api/types";
 import { displayDate, diffDates, sameDate, get12hrStr, get24hrStr } from "../util/time";
 
 interface CustomFieldEntryCellProps {

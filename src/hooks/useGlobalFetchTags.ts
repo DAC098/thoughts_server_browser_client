@@ -1,4 +1,4 @@
-import { GetTagsArgs } from "../apiv2/tags";
+import { GetTagsArgs } from "../api/tags";
 import { tags_actions } from "../redux/slices/tags";
 import useAppDispatch from "./useAppDispatch";
 import useAppSelector from "./useAppSelector";

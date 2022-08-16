@@ -1,4 +1,3 @@
-import React from "react"
 import { render } from "react-dom"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import App from "./App"
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", e => {
         <Provider store={store}>
             <BrowserRouter basename="/">
                 <Routes>
-                    <Route path="/auth/login" element={<Login/>}/>
+                    <Route path="/auth/session" element={<Login/>}/>
                     <Route path="*" element={<App/>}/>
                 </Routes>
             </BrowserRouter>

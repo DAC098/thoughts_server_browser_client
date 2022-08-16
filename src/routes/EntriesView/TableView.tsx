@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { IColumn, Icon, ShimmeredDetailsList, Sticky, StickyPositionType, TooltipHost, TooltipOverflowMode } from "@fluentui/react"
 import { Link, useLocation } from "react-router-dom"
-import { ComposedEntry } from "../../apiv2/types"
+import { ComposedEntry } from "../../api/types"
 import useAppSelector from "../../hooks/useAppSelector"
 import TagToken from "../../components/tags/TagItem"
 import { CustomFieldEntryCell } from "../../components/CustomFieldEntryCell"

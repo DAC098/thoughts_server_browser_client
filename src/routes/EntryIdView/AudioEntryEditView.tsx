@@ -1,6 +1,6 @@
 import { DefaultButton, IconButton, Stack, Text, Toggle } from "@fluentui/react";
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { getUserMedia } from "../../../util/media";
+import { getUserMedia } from "../../util/media";
 import { AudioEntryState, AudioEntryUI, EntryIdViewContext, entry_id_view_actions } from "./reducer";
 
 interface AudioEntryEditViewProps {

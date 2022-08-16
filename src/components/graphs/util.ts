@@ -1,4 +1,4 @@
-import { CustomField, ComposedEntry, EntryMarker, CustomFieldValue } from "../../apiv2/types";
+import { CustomField, ComposedEntry, EntryMarker, CustomFieldValue } from "../../api/types";
 import { dateFromUnixTimeZeroHMSM, getDateZeroHMSM } from "../../util/time";
 
 interface EntryMarkerInfo {

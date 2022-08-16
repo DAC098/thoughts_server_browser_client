@@ -1,24 +1,21 @@
-import { CommandBarButton, IconButton, Nav, Persona, Stack } from "@fluentui/react"
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import React, { Reducer, useEffect, useReducer, useState } from "react"
+import { IconButton, INavLinkGroup, Nav, Persona, Stack } from "@fluentui/react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import useAppDispatch from "./hooks/useAppDispatch"
+import api from "./api"
 import useAppSelector from "./hooks/useAppSelector"
-import { view_actions } from "./redux/slices/view"
-import { SliceActionTypes } from "./redux/types"
-import {json} from "./request"
-import resize_listener from "./util/ResizeListener"
 
 const NavSection = () => {
     const nav_width = 200;
     const navigate = useNavigate();
-    const app_dispatch = useAppDispatch();
     const active_user_state = useAppSelector(state => state.active_user);
-    const view_state = useAppSelector(state => state.view);
+
+    const [view_menu, setViewMenu] = useState(true);
 
     const logout = () => {
-        json.post("/auth/logout",{}).then(() => {
-            window.location.pathname = "/auth/login";
+        api.auth.session.del({}).then(res => {
+            if (res.status === 200) {
+                window.location.pathname = "/auth/session"
+            }
         }).catch(console.error)
     }
 
@@ -27,29 +24,37 @@ const NavSection = () => {
 
     if (active_user_state.user) {
         username = active_user_state.user.username;
-        // full_name = active_user_state.user.full_name;
+        full_name = active_user_state.user.full_name;
     }
 
-    let nav_groups = [
+    let nav_groups: INavLinkGroup[] = [
         {
-            name: "Home",
             links: [
                 {
+                    name: "New Entry",
+                    url: "/entries/0",
+                    icon: "Add"
+                },
+                {
                     name: "Entries",
-                    url: "/entries"
+                    url: "/entries",
+                    icon: "List"
                 },
                 {
                     name: "Fields",
-                    url: "/custom_fields"
+                    url: "/custom_fields",
+                    icon: "FieldNotChanged"
                 },
                 {
                     name: "Tags",
-                    url: "/tags"
-                }
+                    url: "/tags",
+                    icon: "Tag"
+                },
             ]
         },
         {
             name: "Manage",
+            collapseByDefault: true,
             links: [
                 {
                     name: "Users",
@@ -70,62 +75,60 @@ const NavSection = () => {
     if (active_user_state.user.level === 1) {
         nav_groups.push({
             name: "Admin",
+            collapseByDefault: true,
             links: [
                 {
                     name: "Users",
                     url: "/admin/users"
-                },
-                {
-                    name: "Global Fields",
-                    url: "/global/custom_fields"
                 }
             ]
         });
     }
 
+    nav_groups.push({
+        links: [
+            {
+                name: "Logout",
+                url: "/auth/session",
+                icon: "Leave",
+                onClick: logout
+            }
+        ]
+    })
+
     return <div style={{
-        width: view_state.is_min_width ?
-               0 :
-               (view_state.visible ? nav_width : 0)
+        width: view_menu ? nav_width : "min-content"
     }}>
         <Stack
             tokens={{padding: 4, childrenGap: 8}}
             styles={{root: {
-                position: "absolute",
+                position: "relative",
                 top: 0,
-                left: view_state.visible ? 0 : `-${nav_width}px`,
-                width: nav_width,
                 height: "100%",
                 zIndex: 2,
                 backgroundColor: "white"
             }}}
         >
-            {view_state.is_min_width ?
-                <IconButton
-                    iconProps={{iconName: "Cancel"}}
-                    styles={{"root": {
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        zIndex: 2
-                    }}}
-                    onClick={() => app_dispatch(view_actions.set_visible(false))}
-                />
-                :
-                null
-            }
+            <IconButton
+                iconProps={{iconName: view_menu ? "DoubleChevronLeft" : "DoubleChevronRight"}}
+                styles={{"root": {
+                    position: view_menu ? "absolute" : null,
+                    top: view_menu ? 0 : null,
+                    right: view_menu ? 0 : null,
+                    zIndex: 1
+                }}}
+                onClick={() => setViewMenu(!view_menu)}
+            />
             <Persona
                 text={full_name ?? username}
-                secondaryText={username}
+                secondaryText={full_name != null ? username : null}
             />
-            <Stack horizontal styles={{root: {height: 44}}}>
-                <CommandBarButton
-                    text="Logout"
-                    iconProps={{iconName: "Leave"}}
-                    onClick={logout}
-                />
-            </Stack>
             <Nav
+                styles={{
+                    "groupContent": {
+                        marginBottom: 0
+                    }
+                }}
                 onLinkClick={(e,i) => {
                     if (e != null) {
                         e.preventDefault();

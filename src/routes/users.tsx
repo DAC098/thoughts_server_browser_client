@@ -1,8 +1,8 @@
 import { IconButton, Persona, Stack } from "@fluentui/react";
 import React, { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
-import { } from "../apiv2/types"
-import api from "../apiv2";
+import { } from "../api/types"
+import api from "../api";
 
 const Users = () => {
     let [allowed, setAllowed] = useState<any[]>([]);

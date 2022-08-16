@@ -3,7 +3,7 @@ import { Group } from '@visx/group'
 import { AxisLeft, AxisBottom } from '@visx/axis'
 import { GridRows, GridColumns } from '@visx/grid'
 import { scaleTime, scaleLinear } from '@visx/scale'
-import { CustomField, ComposedEntry, FloatValue } from "../../apiv2/types";
+import { CustomField, ComposedEntry, FloatValue } from "../../api/types";
 import { CircleMarker, TransCircleMarker } from "./markers"
 import { SolidLinePath } from "./line_paths"
 import { defaultGetX } from "./getters"

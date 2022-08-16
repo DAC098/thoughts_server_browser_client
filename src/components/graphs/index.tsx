@@ -1,5 +1,5 @@
 import React from "react"
-import { CustomField, ComposedEntry, CustomFieldType } from "../../apiv2/types"
+import { CustomField, ComposedEntry, CustomFieldType } from "../../api/types"
 import FloatGraph from "./Float"
 import FloatRangeGraph from "./FloatRange"
 import IntegerGraph from "./Integer"

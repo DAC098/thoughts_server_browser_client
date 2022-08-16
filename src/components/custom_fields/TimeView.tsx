@@ -1,6 +1,6 @@
 import React from "react"
 import { Stack, Toggle } from "@fluentui/react";
-import { CustomFieldType, TimeConfig } from "../../apiv2/types";
+import { CustomFieldType, TimeConfig } from "../../api/types";
 
 interface TimeEditViewProps {
     config: TimeConfig,

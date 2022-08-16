@@ -1,6 +1,6 @@
 import { SpinButton, Stack, Toggle, Label } from "@fluentui/react"
 import React from "react"
-import { IntegerConfig, CustomFieldType } from "../../apiv2/types"
+import { IntegerConfig, CustomFieldType } from "../../api/types"
 import { optionalCloneInteger } from "../../util/clone"
 
 interface IntegerEditViewProps {

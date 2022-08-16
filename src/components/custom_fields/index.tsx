@@ -1,5 +1,5 @@
 import React from "react"
-import { CustomFieldConfig, CustomFieldType } from "../../apiv2/types"
+import { CustomFieldConfig, CustomFieldType } from "../../api/types"
 import { FloatRangeEditView } from "./FloatRangeView"
 import { FloatEditView } from "./FloatView"
 import { IntegerRangeEditView } from "./IntegerRangeView"

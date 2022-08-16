@@ -9,7 +9,7 @@ import {
     TimeConfig,
     TimeRangeConfig,
     CustomFieldConfig
-} from "../../apiv2/types"
+} from "../../api/types"
 import { FloatRangeEditView, FloatRangeReadView } from "./FloatRangeView"
 import { FloatEditView, FloatReadView } from "./FloatView"
 import { IntegerRangeEditView, IntegerRangeReadView } from "./IntegerRangeView"

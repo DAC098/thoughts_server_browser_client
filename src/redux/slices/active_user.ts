@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { User } from "../../apiv2/types"
-import { createUser } from "../../apiv2/types/methods"
+import { User } from "../../api/types"
+import { createUser } from "../../api/types/methods"
 
 interface UpdateInfoPayload {
     full_name: string, 
