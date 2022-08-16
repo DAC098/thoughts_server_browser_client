@@ -245,14 +245,28 @@ export function CommandBarView({
                 <Stack>
                     <Label htmlFor="from-date-selector">From</Label>
                     <Stack horizontal>
-                        <DatePicker id="from-date-selector" value={from_date} onSelectDate={d => setFromDate(d)}/>
+                        <DatePicker 
+                            id="from-date-selector" 
+                            styles={{"root": {
+                                width: "200px"
+                            }}}
+                            value={from_date} 
+                            onSelectDate={d => setFromDate(d)}
+                            />
                         <IconButton iconProps={{iconName: "Delete"}} onClick={() => setFromDate(null)}/>
                     </Stack>
                 </Stack>
                 <Stack>
                     <Label htmlFor="to-date-selector">To</Label>
                     <Stack horizontal>
-                        <DatePicker id="to-date-selector" value={to_date} onSelectDate={d => setToDate(d)}/>
+                        <DatePicker 
+                            id="to-date-selector" 
+                            styles={{"root": {
+                                width: "200px"
+                            }}}
+                            value={to_date} 
+                            onSelectDate={d => setToDate(d)}
+                            />
                         <IconButton iconProps={{iconName: "Delete"}} onClick={() => setToDate(null)}/>
                     </Stack>
                 </Stack>
