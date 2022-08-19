@@ -18,10 +18,7 @@ export interface GetEntriesArgs {
     user_id?: number | string
 }
 
-export async function get({
-    query = {},
-    user_id = null
-}: GetEntriesArgs) {
+export function retrieveGetUrlFromArgs(query: GetEntriesQuery = {}, user_id: number | string = null,): URL {
     let url = user_id != null ? urlFromString(`/users/${user_id}/entries`) : urlFromString("/entries");
 
     if (query.from != null && query.from_marker == null) {
@@ -32,7 +29,7 @@ export async function get({
         url.searchParams.append("to", unixTimeStrFromDate(query.to));
     }
 
-    if (query.tags != null) {
+    if (query.tags != null && query.tags.length > 0) {
         url.searchParams.append("tags", query.tags.join(","))
     }
 
@@ -43,6 +40,15 @@ export async function get({
     if (query.to_marker != null) {
         url.searchParams.append("to_marker", query.to_marker.toString());
     }
+
+    return url;
+}
+
+export async function get({
+    query = {},
+    user_id = null
+}: GetEntriesArgs) {
+    let url = retrieveGetUrlFromArgs(query, user_id);
 
     return await json.get<ComposedEntry[]>(url);
 }

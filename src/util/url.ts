@@ -42,5 +42,5 @@ export function stringFromLocation(
 }
 
 export function currentUrl() {
-    return urlFromLocation(window.location);
+    return new URL(window.location.toString());
 }

@@ -45,10 +45,15 @@ function getToDate(url: URL) {
     return null;
 }
 
-function getDates(url: URL) {
+function getTags(url: URL) {
+    return url.searchParams.get("tags")?.split(",").map(v => parseInt(v)) ?? [];
+}
+
+function getQueryData(url: URL) {
     return {
         from: getFromDate(url),
-        to: getToDate(url)
+        to: getToDate(url),
+        tags: getTags(url)
     }
 }
 
@@ -77,14 +82,18 @@ export function CommandBarView({
 
     const [from_date, setFromDate] = useState<Date>(getFromDate(urlFromLocation(location)));
     const [to_date, setToDate] = useState<Date>(getToDate(urlFromLocation(location)));
-    const [tags_selected, setTagsSelected] = useState<number[]>(() => {
-        let url = new URL(location.pathname + location.search + location.hash, window.location.origin);
-        return []
-    });
+    const [tags_selected, setTagsSelected] = useState<number[]>(getTags(urlFromLocation(location)));
 
     useEffect(() => {
         if (entries_state.owner !== user_id) {
-            globalFetchEntries({user_id, query: {from: from_date, to: to_date}});
+            globalFetchEntries({
+                user_id, 
+                query: {
+                    from: from_date, 
+                    to: to_date, 
+                    tags: tags_selected
+                }
+            });
         }
 
         if (custom_fields_state.owner !== user_id) {
@@ -98,20 +107,28 @@ export function CommandBarView({
 
     useEffect(() => {
         const onPopState = (ev: PopStateEvent) => {
-            const location = document.location;
+            const location = window.location;
+
             // ignore anything that is not an entries path
             if (!location.pathname.endsWith("entries")) {
                 return;
             }
 
             let url = urlFromLocation(location);
-            let dates = getDates(url);
+            let data = getQueryData(url);
 
-            setFromDate(dates.from);
-            setToDate(dates.to);
-            appDispatch(entries_actions.fetchEntries({
-                user_id, query: {from: dates.from, to: dates.to}
-            }));
+            setFromDate(data.from);
+            setToDate(data.to);
+            setTagsSelected(data.tags);
+
+            globalFetchEntries({
+                user_id, 
+                query: {
+                    from: from_date, 
+                    to: to_date, 
+                    tags: tags_selected
+                }
+            });
         };
 
         window.addEventListener("popstate", onPopState);
@@ -163,8 +180,15 @@ export function CommandBarView({
                     url.searchParams.append("to", unixTimeFromDate(to_date).toString());
                 }
 
+                if (tags_selected.length > 0) {
+                    url.searchParams.append("tags", tags_selected.join(","));
+                }
+
                 navigate(noOriginUrlString(url));
-                appDispatch(entries_actions.fetchEntries({user_id, query: {from: from_date, to: to_date}}));
+                appDispatch(entries_actions.fetchEntries({
+                    user_id, 
+                    query: {from: from_date, to: to_date, tags: tags_selected}
+                }));
             }
         }
     ];

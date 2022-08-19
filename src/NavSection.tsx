@@ -109,7 +109,7 @@ const NavSection = () => {
                 backgroundColor: "white"
             }}}
         >
-            <IconButton
+            {/* <IconButton
                 iconProps={{iconName: view_menu ? "DoubleChevronLeft" : "DoubleChevronRight"}}
                 styles={{"root": {
                     position: view_menu ? "absolute" : null,
@@ -118,7 +118,7 @@ const NavSection = () => {
                     zIndex: 1
                 }}}
                 onClick={() => setViewMenu(!view_menu)}
-            />
+            /> */}
             <Persona
                 text={full_name ?? username}
                 secondaryText={full_name != null ? username : null}
