@@ -56,9 +56,7 @@ const EntriesView = ({user_specific = false}: EntriesViewProps) => {
             </Stack>
         </EntriesViewContext.Provider>
         {outlet != null ?
-            <OverlayedPage>
-                {outlet}
-            </OverlayedPage>
+            <OverlayedPage children={outlet}/>
             :
             null
         }

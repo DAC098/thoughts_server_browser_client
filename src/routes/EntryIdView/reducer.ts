@@ -136,7 +136,10 @@ export const entryIdViewSlice = createSlice({
             state.changes_made = true;
         },
         delete_custom_field_entry: (state, action: PayloadAction<string>) => {
-            delete state.current.custom_field_entries[action.payload];
+            // delete is leaving the key for some reason
+            // delete state.current.custom_field_entries[action.payload];
+            let {[action.payload]: value, ...keep} = state.current.custom_field_entries;
+            state.current.custom_field_entries = keep;
             state.changes_made = true;
         },
 

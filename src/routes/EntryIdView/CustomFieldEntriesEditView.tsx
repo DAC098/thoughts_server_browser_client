@@ -52,7 +52,7 @@ const CustomFieldEntriesEditView = ({custom_fields, custom_field_entries}: Custo
                 key={field.id}
                 field={field}
                 entry={custom_field_entries[field.id]}
-        
+
                 onDelete={() => dispatch(entry_id_view_actions.delete_custom_field_entry(field.id.toString()))}
                 onChange={(value) => dispatch(entry_id_view_actions.update_custom_field_entry({index: field.id, ...value}))}
             />
