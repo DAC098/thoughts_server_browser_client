@@ -5,7 +5,7 @@ import App from "./App"
 import "./request"
 
 import { initializeIcons } from "@fluentui/react/lib/Icons"
-import Login from "./routes/auth/login"
+import Login from "./routes/Login"
 import { Provider } from "react-redux"
 import { store } from "./redux/store"
 import { view_actions } from "./redux/slices/view"

@@ -4,9 +4,10 @@ export type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 export type Path = URL | string;
 
 export interface ResponseJSON<T = any> {
-    type?: string,
+    type?: string
+    error?: string
     message: string
-    date: string,
+    date?: string
     data?: T
 }
 
@@ -55,7 +56,7 @@ export function getNewRequest(method: Method, url: Path, headers: HeadersInit, b
         url = new URL(url, window.location.origin);
     }
 
-    return new Request(url.toString(), {
+    return new Request(url, {
         method,
         headers,
         body
@@ -83,11 +84,11 @@ async function handleResponse<T = any>(response: Response) : Promise<{body: JSON
             status: response.status
         }
     } else {
-        let t = "unknown";
+        let t = "Unknown";
         let m = null;
 
         if (typeof body === "object") {
-            t = body.type;
+            t = body.type ?? body.error;
             m = body.message;
         }
 
